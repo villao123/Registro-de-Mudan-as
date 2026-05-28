@@ -155,6 +155,10 @@ tbody td{padding:10px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,
 .modal-value{font-size:12px;color:#CBD5E0;line-height:1.6}
 .modal-value.long{font-size:12px;color:#A0AEC0;line-height:1.7;background:#0E1117;border-radius:8px;padding:10px 12px;border:1px solid #1E2D3D}
 .modal-tags{display:flex;gap:8px;flex-wrap:wrap}
+.loading-overlay{position:fixed;inset:0;background:#0E1117;z-index:2000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.loading-spinner{width:36px;height:36px;border:3px solid #1E2D3D;border-top-color:#63B3ED;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:13px;color:#4A6378}
 </style>
 </head>
 <body>
@@ -540,8 +544,25 @@ function renderDetail(projId) {
 
 // ── GRÁFICOS ABA 2 ────────────────────────────────────────
 let chartsInited = false;
-function initCharts() {
-  if (chartsInited) return;
+let chartProjInstance, chartTipoInstance, chartCustoInstance, chartStatusInstance;
+
+function initCharts(
+  projLabels   = ['Multigateways','Ampliação\nUP GO','Sex.\nFetal','Jornada','BID','Feira ST'],
+  projValues   = [12,10,2,1,1,1],
+  custoLabels  = ['Ampliação UP GO','Desc. Sexagem Fetal','Multigateways'],
+  custoValues  = [2289946,205317,138080],
+  tipoValues   = [17,4,3,1],
+  statusValues = [22,2,1,1],
+  kpis         = {}
+) {
+  if (chartsInited) {
+    // Atualiza dados existentes
+    if (chartProjInstance)   { chartProjInstance.data.labels = projLabels; chartProjInstance.data.datasets[0].data = projValues; chartProjInstance.update(); }
+    if (chartTipoInstance)   { chartTipoInstance.data.datasets[0].data = tipoValues; chartTipoInstance.update(); }
+    if (chartCustoInstance)  { chartCustoInstance.data.labels = custoLabels; chartCustoInstance.data.datasets[0].data = custoValues; chartCustoInstance.update(); }
+    if (chartStatusInstance) { chartStatusInstance.data.datasets[0].data = statusValues; chartStatusInstance.update(); }
+    return;
+  }
   chartsInited = true;
 
   const gc = (color) => ({ color, font: { size: 10, family: 'Inter' } });
@@ -566,13 +587,13 @@ function initCharts() {
   };
   Chart.register(centerTextPlugin);
 
-  // 1 — Mudanças por projeto (barras com valor em cima)
-  new Chart(document.getElementById('chartProj'), {
+  // 1 — Mudanças por projeto
+  chartProjInstance = new Chart(document.getElementById('chartProj'), {
     type:'bar',
     data:{
-      labels:['Multigateways','Ampliação\nUP GO','Sex.\nFetal','Jornada','BID','Feira ST'],
+      labels: projLabels,
       datasets:[{
-        data:[12,10,2,1,1,1],
+        data: projValues,
         backgroundColor:['#63B3ED','#63B3ED','#4A6378','#4A6378','#4A6378','#4A6378'],
         borderRadius:5
       }]
@@ -610,11 +631,11 @@ function initCharts() {
   });
 
   // 2 — Tipo de mudança (doughnut com centro)
-  new Chart(document.getElementById('chartTipo'), {
+  chartTipoInstance = new Chart(document.getElementById('chartTipo'), {
     type:'doughnut',
     data:{
       labels:['Custo','Tempo','Escopo','Prazo'],
-      datasets:[{ data:[17,4,3,1], backgroundColor:['#F6AD55','#63B3ED','#B794F4','#FC8181'], borderWidth:0, hoverOffset:6 }]
+      datasets:[{ data: tipoValues, backgroundColor:['#F6AD55','#63B3ED','#B794F4','#FC8181'], borderWidth:0, hoverOffset:6 }]
     },
     options:{...base, cutout:'65%',
       layout:{ padding:{ top:8, bottom:8 } },
@@ -636,11 +657,11 @@ function initCharts() {
   });
 
   // 3 — Custo por projeto (horizontal bar com valor)
-  new Chart(document.getElementById('chartCusto'), {
+  chartCustoInstance = new Chart(document.getElementById('chartCusto'), {
     type:'bar',
     data:{
-      labels:['Ampliação UP GO','Desc. Sexagem Fetal','Multigateways'],
-      datasets:[{ data:[2289946,205317,138080], backgroundColor:['#F6AD55','#63B3ED','#68D391'], borderRadius:5 }]
+      labels: custoLabels,
+      datasets:[{ data: custoValues, backgroundColor:['#F6AD55','#63B3ED','#68D391','#B794F4'], borderRadius:5 }]
     },
     options:{...base, indexAxis:'y',
       scales:{
@@ -674,11 +695,11 @@ function initCharts() {
   });
 
   // 4 — Status (doughnut com centro)
-  new Chart(document.getElementById('chartStatus'), {
+  chartStatusInstance = new Chart(document.getElementById('chartStatus'), {
     type:'doughnut',
     data:{
       labels:['Aprovado','Ok','Pendente','Andamento'],
-      datasets:[{ data:[22,2,1,1], backgroundColor:['#68D391','#63B3ED','#FC8181','#F6AD55'], borderWidth:0, hoverOffset:6 }]
+      datasets:[{ data: statusValues, backgroundColor:['#68D391','#63B3ED','#FC8181','#F6AD55'], borderWidth:0, hoverOffset:6 }]
     },
     options:{...base, cutout:'65%',
       layout:{ padding:{ top:8, bottom:8 } },
@@ -775,10 +796,163 @@ function closeModalBtn() {
 }
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeModalBtn(); });
 
-// ── INIT ──────────────────────────────────────────────────
-renderDetail('multigateways');
-initCharts();
+// ── WORKER URL ────────────────────────────────────────────
+const WORKER_URL = 'https://pmo-mudancas.vitormanu-dl05.workers.dev';
+
+// ── INIT: busca dados do Worker ───────────────────────────
+async function carregarDados() {
+  const loading = document.getElementById('loadingOverlay');
+  if (loading) loading.style.display = 'flex';
+
+  try {
+    const res = await fetch(WORKER_URL + '/data');
+    const data = await res.json();
+
+    if (!data.ok) {
+      mostrarErro('Nenhum dado encontrado. Execute o VBA para sincronizar.');
+      return;
+    }
+
+    // Reconstrói PROJECTS e FULL_DATA a partir do Worker
+    const projetosWorker = data.projetos;
+    const kpis = data.kpis;
+
+    // Atualiza KPIs
+    document.querySelector('.kpi-blue .kpi-val').textContent   = kpis.total_mudancas;
+    document.querySelector('.kpi-blue .kpi-sub').textContent   = 'em ' + kpis.total_projetos + ' projetos ativos';
+
+    const custoFmt = kpis.total_custo >= 1000000
+      ? 'R$' + (kpis.total_custo / 1000000).toFixed(1) + 'M'
+      : 'R$' + (kpis.total_custo / 1000).toFixed(0) + 'K';
+    document.querySelector('.kpi-amber .kpi-val').textContent  = custoFmt;
+
+    document.querySelector('.kpi-red .kpi-val').textContent    = kpis.impede_pct + '%';
+    document.querySelector('.kpi-red .kpi-sub').textContent    = kpis.impede_n + ' de ' + kpis.total_mudancas + ' mudanças';
+
+    document.querySelector('.kpi-green .kpi-val').textContent  = kpis.aprov_pct + '%';
+    document.querySelector('.kpi-green .kpi-sub').textContent  = kpis.aprov_n + ' de ' + kpis.total_mudancas + ' aprovadas';
+
+    // Atualiza topbar
+    document.querySelector('.topbar-right').textContent = kpis.total_mudancas + ' mudanças · ' + kpis.total_projetos + ' projetos';
+
+    // Reconstrói tabela Aba 1
+    const tbody = document.querySelector('#mainTable tbody');
+    tbody.innerHTML = '';
+    projetosWorker.forEach(p => {
+      const tipoClass  = p.rows && p.rows.length > 0 ? (TIPO_CLASS[p.rows[0].classificacao] || 'p-gray') : 'p-gray';
+      const tipoLabel  = p.rows && p.rows.length > 0 ? p.rows[0].classificacao : '—';
+      const statusMaior = p.pend_n > 0 ? 'Pendente' : p.andam_n > 0 ? 'Em andamento' : 'Aprovado';
+      const scClass    = STATUS_CLASS[statusMaior] || 'p-green';
+      const tr = document.createElement('tr');
+      tr.dataset.tipo = tipoLabel;
+      tr.onclick = () => goDetail(p.id);
+      tr.innerHTML = `
+        <td><div class="proj-name">${p.nome.replace('Projeto ','')}</div><div class="proj-gp">${p.gp}</div></td>
+        <td><span class="pill p-blue">${p.qtd}</span></td>
+        <td class="mono">${p.custo_total > 0 ? 'R$ ' + p.custo_total.toLocaleString('pt-BR', {minimumFractionDigits:0}) : '—'}</td>
+        <td><span class="pill ${tipoClass}">${tipoLabel}</span></td>
+        <td><span class="pill ${scClass}">${statusMaior}</span></td>
+        <td><span class="pill p-red">Sim — ${p.impede_n} de ${p.qtd}</span></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // Reconstrói abas de projetos (Aba 2)
+    const projTabsEl = document.querySelector('.proj-tabs');
+    projTabsEl.innerHTML = '';
+    projetosWorker.forEach((p, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'proj-tab' + (idx === 0 ? ' active' : '');
+      btn.textContent = p.nome.replace('Projeto ', '');
+      btn.onclick = () => showProj(p.id, btn);
+      projTabsEl.appendChild(btn);
+    });
+
+    // Substitui PROJECTS e FULL_DATA globais com dados do Worker
+    projetosWorker.forEach(p => {
+      PROJECTS[p.id] = {
+        name: p.nome.replace('Projeto ', ''),
+        meta: 'GP: ' + p.gp + ' · Ref. Artia: ' + p.ref,
+        stats: {
+          qtd:     p.qtd,
+          custo:   p.custo_fmt,
+          impedeN: p.impede_n,
+          impedeT: p.qtd,
+          aprovN:  p.aprov_n,
+          pendN:   p.pend_n,
+          cancelN: 0
+        },
+        rows: (p.rows || []).map(r => [
+          r.num, r.desc, r.classificacao, r.custo, r.prazo, r.responsavel, r.aprovador, r.status
+        ])
+      };
+      FULL_DATA[p.id] = p.rows || [];
+    });
+
+    // Atualiza última atualização
+    if (data.ultima_atualizacao) {
+      const dt = new Date(data.ultima_atualizacao);
+      const fmt = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+      document.querySelector('.topbar-sub').textContent += ' · Atualizado em ' + fmt;
+    }
+
+    // Renderiza primeiro projeto e gráficos
+    if (projetosWorker.length > 0) {
+      renderDetail(projetosWorker[0].id);
+      atualizarGraficos(projetosWorker, kpis);
+    }
+
+  } catch (e) {
+    mostrarErro('Erro ao conectar com o servidor: ' + e.message);
+  } finally {
+    if (loading) loading.style.display = 'none';
+  }
+}
+
+function mostrarErro(msg) {
+  const loading = document.getElementById('loadingOverlay');
+  if (loading) {
+    loading.innerHTML = `
+      <div style="text-align:center">
+        <div style="font-size:32px;margin-bottom:12px">⚠️</div>
+        <div style="font-size:14px;color:#FC8181;font-weight:600;margin-bottom:8px">Dados não encontrados</div>
+        <div style="font-size:12px;color:#4A6378;max-width:300px">${msg}</div>
+        <button onclick="carregarDados()" style="margin-top:16px;padding:8px 20px;background:#1E2D3D;border:1px solid #63B3ED;color:#63B3ED;border-radius:8px;cursor:pointer;font-size:12px">Tentar novamente</button>
+      </div>
+    `;
+    loading.style.display = 'flex';
+  }
+}
+
+function atualizarGraficos(projetos, kpis) {
+  // Conta tipos de mudança
+  const tiposCount = { Custo: 0, Tempo: 0, Escopo: 0, Prazo: 0 };
+  projetos.forEach(p => {
+    (p.rows || []).forEach(r => {
+      if (tiposCount[r.classificacao] !== undefined) tiposCount[r.classificacao]++;
+    });
+  });
+
+  initCharts(
+    projetos.map(p => p.nome.replace('Projeto ', '')),
+    projetos.map(p => p.qtd),
+    projetos.filter(p => p.custo_total > 0).map(p => p.nome.replace('Projeto ', '')),
+    projetos.filter(p => p.custo_total > 0).map(p => p.custo_total),
+    [tiposCount.Custo, tiposCount.Tempo, tiposCount.Escopo, tiposCount.Prazo],
+    [kpis.aprov_n, kpis.total_mudancas - kpis.aprov_n - kpis.pend_n - kpis.andam_n, kpis.pend_n, kpis.andam_n],
+    kpis
+  );
+}
+
+carregarDados();
+
 </script>
+<!-- LOADING -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Carregando dados do PMO...</div>
+</div>
+
 <!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal">
