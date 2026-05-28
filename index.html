@@ -839,17 +839,21 @@ async function carregarDados() {
     const tbody = document.querySelector('#mainTable tbody');
     tbody.innerHTML = '';
     projetosWorker.forEach(p => {
-      const tipoClass  = p.rows && p.rows.length > 0 ? (TIPO_CLASS[p.rows[0].classificacao] || 'p-gray') : 'p-gray';
-      const tipoLabel  = p.rows && p.rows.length > 0 ? p.rows[0].classificacao : '—';
+      // Tipo predominante — pega o mais frequente nas rows
+      const tipoFreq = {};
+      (p.rows || []).forEach(r => { if(r.classificacao) tipoFreq[r.classificacao] = (tipoFreq[r.classificacao]||0)+1; });
+      const tipoLabel = Object.keys(tipoFreq).sort((a,b)=>tipoFreq[b]-tipoFreq[a])[0] || '—';
+      const tipoClass = TIPO_CLASS[tipoLabel] || 'p-gray';
       const statusMaior = p.pend_n > 0 ? 'Pendente' : p.andam_n > 0 ? 'Em andamento' : 'Aprovado';
       const scClass    = STATUS_CLASS[statusMaior] || 'p-green';
+      const custoFmt   = p.custo_total > 0 ? 'R$ ' + p.custo_total.toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:0}) : '—';
       const tr = document.createElement('tr');
       tr.dataset.tipo = tipoLabel;
       tr.onclick = () => goDetail(p.id);
       tr.innerHTML = `
         <td><div class="proj-name">${p.nome.replace('Projeto ','')}</div><div class="proj-gp">${p.gp}</div></td>
         <td><span class="pill p-blue">${p.qtd}</span></td>
-        <td class="mono">${p.custo_total > 0 ? 'R$ ' + p.custo_total.toLocaleString('pt-BR', {minimumFractionDigits:0}) : '—'}</td>
+        <td class="mono">${custoFmt}</td>
         <td><span class="pill ${tipoClass}">${tipoLabel}</span></td>
         <td><span class="pill ${scClass}">${statusMaior}</span></td>
         <td><span class="pill p-red">Sim — ${p.impede_n} de ${p.qtd}</span></td>
@@ -883,7 +887,7 @@ async function carregarDados() {
           cancelN: 0
         },
         rows: (p.rows || []).map(r => [
-          r.num, r.desc, r.classificacao, r.custo, r.prazo, r.responsavel, r.aprovador, r.status
+          r.num, r.desc, r.classificacao || '—', r.custo || '—', r.prazo || '—', r.responsavel || '—', r.aprovador || '—', r.status || '—'
         ])
       };
       FULL_DATA[p.id] = p.rows || [];
@@ -892,13 +896,17 @@ async function carregarDados() {
     // Atualiza última atualização
     if (data.ultima_atualizacao) {
       const dt = new Date(data.ultima_atualizacao);
-      const fmt = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+      const fmt = dt.toLocaleDateString('pt-BR') + ' · ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
       document.querySelector('.topbar-sub').textContent += ' · Atualizado em ' + fmt;
     }
 
-    // Renderiza primeiro projeto e gráficos
+    // Renderiza primeiro projeto (PROJECTS já populado) e gráficos
     if (projetosWorker.length > 0) {
-      renderDetail(projetosWorker[0].id);
+      const firstId = projetosWorker[0].id;
+      // Marca primeira aba como ativa
+      const firstTab = document.querySelector('.proj-tab');
+      if (firstTab) firstTab.classList.add('active');
+      renderDetail(firstId);
       atualizarGraficos(projetosWorker, kpis);
     }
 
