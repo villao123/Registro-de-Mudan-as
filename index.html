@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PMO · Registro de Mudanças · Grupo DB</title>
+<title>PMO · Registro de Mudanças · DB Diagnósticos</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
@@ -41,9 +41,9 @@ body{background:#0E1117;color:#E2E8F0;display:flex;flex-direction:column;height:
    ABA 1 — VISÃO GERAL
 ══════════════════════════════════════════ */
 .tab1-inner{flex:1;padding:12px 14px;display:grid;grid-template-rows:auto 1fr;gap:10px;overflow:hidden}
-.tab1-bottom{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;overflow:hidden;min-height:0}
+.tab1-bottom{display:grid;grid-template-columns:1.6fr 1fr;gap:10px;overflow:hidden;min-height:0}
 .tab1-right{display:flex;flex-direction:column;gap:10px;overflow:hidden;min-height:0}
-.side-card{background:#161B27;border:1px solid #1E2D3D;border-radius:10px;padding:10px 12px;flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.side-card{background:#161B27;border:1px solid #1E2D3D;border-radius:10px;padding:14px 16px;flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
 .side-card .section-title{margin-bottom:10px;flex-shrink:0}
 .hbar-list{flex:1;display:flex;flex-direction:column;justify-content:space-around;min-height:0}
 .hbar-row{display:flex;flex-direction:column;gap:3px}
@@ -82,13 +82,14 @@ body{background:#0E1117;color:#E2E8F0;display:flex;flex-direction:column;height:
 
 .tbl-wrap{flex:1;overflow:auto;min-height:0}
 table{width:100%;border-collapse:collapse}
-thead th{font-size:10px;font-weight:600;color:#2D4459;text-transform:uppercase;letter-spacing:.07em;padding:0 0 12px;text-align:left;border-bottom:1px solid #1E2D3D;position:sticky;top:0;background:#161B27;z-index:1}
+thead th{font-size:9px;font-weight:600;color:#2D4459;text-transform:uppercase;letter-spacing:.07em;padding:0 0 10px;text-align:left;border-bottom:1px solid #1E2D3D;position:sticky;top:0;background:#161B27;z-index:1}
 tbody tr{cursor:pointer;transition:background .1s}
 tbody tr:hover{background:#12171F}
 tbody tr.hidden{display:none}
-tbody td{padding:16px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.05);vertical-align:middle}
-.proj-gp{font-size:11px;color:#3D5166;margin-top:3px}
-.pill{display:inline-block;font-size:10px;font-weight:700;padding:4px 11px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em}
+tbody td{padding:10px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:middle}
+.proj-name{font-weight:600;color:#CBD5E0;font-size:12px}
+.proj-gp{font-size:10px;color:#3D5166;margin-top:2px}
+.pill{display:inline-block;font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em}
 .p-blue{background:rgba(99,179,237,.15);color:#63B3ED}
 .p-green{background:rgba(104,211,145,.15);color:#68D391}
 .p-red{background:rgba(252,129,129,.15);color:#FC8181}
@@ -136,28 +137,6 @@ tbody td{padding:16px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,
 .detail-table tbody tr:hover{background:#12171F}
 .detail-table tbody td{padding:12px 12px 12px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;color:#A0AEC0}
 .desc-text{font-size:12px;color:#CBD5E0;line-height:1.5;max-width:380px}
-/* ── MODAL ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
-.modal-overlay.open{opacity:1;pointer-events:all}
-.modal{background:#161B27;border:1px solid #1E2D3D;border-radius:14px;width:min(780px,92vw);max-height:85vh;display:flex;flex-direction:column;overflow:hidden;transform:translateY(12px);transition:transform .2s}
-.modal-overlay.open .modal{transform:translateY(0)}
-.modal-header{padding:20px 24px 16px;border-bottom:1px solid #1E2D3D;display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0}
-.modal-title{font-size:14px;font-weight:700;color:#fff;line-height:1.4;max-width:600px}
-.modal-subtitle{font-size:11px;color:#4A6378;margin-top:4px}
-.modal-close{width:28px;height:28px;border-radius:6px;border:none;background:rgba(255,255,255,0.06);color:#7B8EA6;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
-.modal-close:hover{background:rgba(255,255,255,0.12);color:#E2E8F0}
-.modal-body{padding:20px 24px;overflow-y:auto;flex:1}
-.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
-.modal-field{display:flex;flex-direction:column;gap:4px}
-.modal-field.full{grid-column:1/-1}
-.modal-label{font-size:9px;font-weight:700;color:#3D5166;text-transform:uppercase;letter-spacing:.08em}
-.modal-value{font-size:12px;color:#CBD5E0;line-height:1.6}
-.modal-value.long{font-size:12px;color:#A0AEC0;line-height:1.7;background:#0E1117;border-radius:8px;padding:10px 12px;border:1px solid #1E2D3D}
-.modal-tags{display:flex;gap:8px;flex-wrap:wrap}
-.loading-overlay{position:fixed;inset:0;background:#0E1117;z-index:2000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
-.loading-spinner{width:36px;height:36px;border:3px solid #1E2D3D;border-top-color:#63B3ED;border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading-text{font-size:13px;color:#4A6378}
 </style>
 </head>
 <body>
@@ -165,7 +144,7 @@ tbody td{padding:16px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,
 <!-- TOPBAR -->
 <div class="topbar">
   <div style="display:flex;align-items:center">
-    <span class="topbar-brand">Grupo DB</span>
+    <span class="topbar-brand">DB Diagnósticos</span>
     <div class="topbar-sep"></div>
     <span class="topbar-sub">PMO · Registro de Solicitações de Mudanças · RQ-1134</span>
   </div>
@@ -182,7 +161,9 @@ tbody td{padding:16px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,
     <button class="sb-btn" onclick="showTab(2,this)" title="">
       ◫<span class="sb-tooltip">Análise</span>
     </button>
-
+    <button class="sb-btn" onclick="showTab(3,this)" title="">
+      ◈<span class="sb-tooltip">Detalhes por Projeto</span>
+    </button>
   </div>
 
   <!-- MAIN -->
@@ -297,40 +278,194 @@ tbody td{padding:16px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,
             </div>
           </div>
 
-          <!-- Coluna direita: 4 gráficos 2x2 -->
-          <div class="tab1-right" style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;">
-            <div class="side-card" style="flex:unset;display:flex;flex-direction:column">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;flex-shrink:0">
-                <span class="section-title">Volume por projeto</span>
+          <!-- Coluna direita: 3 mini cards -->
+          <div class="tab1-right">
+
+            <!-- Mini card 1: Volume por projeto -->
+            <div class="side-card">
+              <div class="section-title">Volume por projeto</div>
+              <div class="hbar-list">
+                <div class="hbar-row">
+                  <div class="hbar-top"><span class="hbar-name">Multigateways Adq.</span><span class="hbar-val">12</span></div>
+                  <div class="hbar-track"><div class="hbar-fill" style="width:100%;background:#63B3ED"></div></div>
+                </div>
+                <div class="hbar-row">
+                  <div class="hbar-top"><span class="hbar-name">Ampliação UP GO</span><span class="hbar-val">10</span></div>
+                  <div class="hbar-track"><div class="hbar-fill" style="width:83%;background:#63B3ED"></div></div>
+                </div>
+                <div class="hbar-row">
+                  <div class="hbar-top"><span class="hbar-name">Desc. Sexagem Fetal</span><span class="hbar-val">2</span></div>
+                  <div class="hbar-track"><div class="hbar-fill" style="width:17%;background:#4A6378"></div></div>
+                </div>
+                <div class="hbar-row">
+                  <div class="hbar-top"><span class="hbar-name">Jornada da Amostra</span><span class="hbar-val">1</span></div>
+                  <div class="hbar-track"><div class="hbar-fill" style="width:8%;background:#4A6378"></div></div>
+                </div>
+                <div class="hbar-row">
+                  <div class="hbar-top"><span class="hbar-name">BID / UP Feira ST</span><span class="hbar-val">2</span></div>
+                  <div class="hbar-track"><div class="hbar-fill" style="width:17%;background:#4A6378"></div></div>
+                </div>
               </div>
-              <div style="flex:1;position:relative;min-height:0"><canvas id="chartProj"></canvas></div>
             </div>
-            <div class="side-card" style="flex:unset;display:flex;flex-direction:column">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;flex-shrink:0">
-                <span class="section-title">Tipo de mudança</span>
+
+            <!-- Mini card 2: Tipo de mudança -->
+            <div class="side-card">
+              <div class="section-title">Tipo de mudança</div>
+              <div class="status-rows">
+                <div class="status-row-item">
+                  <div class="status-row-left">
+                    <div class="status-dot" style="background:#F6AD55"></div>
+                    <span class="status-row-name">Custo</span>
+                    <div class="status-row-bar"><div class="status-row-fill" style="width:63%;background:#F6AD55"></div></div>
+                  </div>
+                  <span class="status-row-count" style="color:#F6AD55">17</span>
+                </div>
+                <div class="status-row-item">
+                  <div class="status-row-left">
+                    <div class="status-dot" style="background:#63B3ED"></div>
+                    <span class="status-row-name">Tempo</span>
+                    <div class="status-row-bar"><div class="status-row-fill" style="width:15%;background:#63B3ED"></div></div>
+                  </div>
+                  <span class="status-row-count" style="color:#63B3ED">4</span>
+                </div>
+                <div class="status-row-item">
+                  <div class="status-row-left">
+                    <div class="status-dot" style="background:#B794F4"></div>
+                    <span class="status-row-name">Escopo</span>
+                    <div class="status-row-bar"><div class="status-row-fill" style="width:11%;background:#B794F4"></div></div>
+                  </div>
+                  <span class="status-row-count" style="color:#B794F4">3</span>
+                </div>
+                <div class="status-row-item">
+                  <div class="status-row-left">
+                    <div class="status-dot" style="background:#FC8181"></div>
+                    <span class="status-row-name">Prazo</span>
+                    <div class="status-row-bar"><div class="status-row-fill" style="width:4%;background:#FC8181"></div></div>
+                  </div>
+                  <span class="status-row-count" style="color:#FC8181">1</span>
+                </div>
               </div>
-              <div style="flex:1;position:relative;min-height:0"><canvas id="chartTipo"></canvas></div>
             </div>
-            <div class="side-card" style="flex:unset;display:flex;flex-direction:column">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;flex-shrink:0">
-                <span class="section-title">Custo por projeto</span>
+
+            <!-- Mini card 3: Status aprovações -->
+            <div class="side-card">
+              <div class="section-title">Status das aprovações</div>
+              <div class="status-rows">
+                <div class="status-row-item">
+                  <div class="status-row-left">
+                    <div class="status-dot" style="background:#68D391"></div>
+                    <span class="status-row-name">Aprovado</span>
+                    <div class="status-row-bar"><div class="status-row-fill" style="width:81%;background:#68D391"></div></div>
+                  </div>
+                  <span class="status-row-count" style="color:#68D391">22</span>
+                </div>
+                <div class="status-row-item">
+                  <div class="status-row-left">
+                    <div class="status-dot" style="background:#63B3ED"></div>
+                    <span class="status-row-name">Ok</span>
+                    <div class="status-row-bar"><div class="status-row-fill" style="width:7%;background:#63B3ED"></div></div>
+                  </div>
+                  <span class="status-row-count" style="color:#63B3ED">2</span>
+                </div>
+                <div class="status-row-item">
+                  <div class="status-row-left">
+                    <div class="status-dot" style="background:#F6AD55"></div>
+                    <span class="status-row-name">Em andamento</span>
+                    <div class="status-row-bar"><div class="status-row-fill" style="width:4%;background:#F6AD55"></div></div>
+                  </div>
+                  <span class="status-row-count" style="color:#F6AD55">1</span>
+                </div>
+                <div class="status-row-item">
+                  <div class="status-row-left">
+                    <div class="status-dot" style="background:#FC8181"></div>
+                    <span class="status-row-name">Pendente</span>
+                    <div class="status-row-bar"><div class="status-row-fill" style="width:4%;background:#FC8181"></div></div>
+                  </div>
+                  <span class="status-row-count" style="color:#FC8181">1</span>
+                </div>
               </div>
-              <div style="flex:1;position:relative;min-height:0"><canvas id="chartCusto"></canvas></div>
             </div>
-            <div class="side-card" style="flex:unset;display:flex;flex-direction:column">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;flex-shrink:0">
-                <span class="section-title">Status aprovações</span>
-              </div>
-              <div style="flex:1;position:relative;min-height:0"><canvas id="chartStatus"></canvas></div>
-            </div>
+
           </div><!-- /tab1-right -->
         </div><!-- /tab1-bottom -->
       </div>
     </div>
 
-    <!-- ═══ ABA 2: DETALHES POR PROJETO ═══ -->
+    <!-- ═══ ABA 2: ANÁLISE ═══ -->
     <div class="tab-panel" id="tab2">
+      <div class="tab2-inner">
+
+        <!-- Card 1: Mudanças por projeto -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <div class="section-title">Mudanças por projeto</div>
+              <div class="chart-insight">Multigateways e UP GO concentram <span style="color:#63B3ED;font-weight:600">81%</span> do total</div>
+            </div>
+            <div class="chart-mini-kpis">
+              <div class="mini-kpi"><span class="mini-val" style="color:#63B3ED">27</span><span class="mini-lbl">total</span></div>
+              <div class="mini-kpi"><span class="mini-val" style="color:#4A6378">6</span><span class="mini-lbl">projetos</span></div>
+            </div>
+          </div>
+          <div class="chart-wrap"><canvas id="chartProj" role="img" aria-label="Mudanças por projeto"></canvas></div>
+        </div>
+
+        <!-- Card 2: Tipo de mudança -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <div class="section-title">Tipo de mudança</div>
+              <div class="chart-insight">Custo é o tipo dominante — <span style="color:#F6AD55;font-weight:600">63%</span> das solicitações</div>
+            </div>
+            <div class="chart-mini-kpis">
+              <div class="mini-kpi"><span class="mini-val" style="color:#F6AD55">17</span><span class="mini-lbl">custo</span></div>
+              <div class="mini-kpi"><span class="mini-val" style="color:#63B3ED">4</span><span class="mini-lbl">tempo</span></div>
+              <div class="mini-kpi"><span class="mini-val" style="color:#B794F4">3</span><span class="mini-lbl">escopo</span></div>
+              <div class="mini-kpi"><span class="mini-val" style="color:#FC8181">1</span><span class="mini-lbl">prazo</span></div>
+            </div>
+          </div>
+          <div class="chart-wrap"><canvas id="chartTipo" role="img" aria-label="Tipo de mudança"></canvas></div>
+        </div>
+
+        <!-- Card 3: Custo por projeto -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <div class="section-title">Custo adicional por projeto (R$)</div>
+              <div class="chart-insight">UP GO responde por <span style="color:#F6AD55;font-weight:600">87%</span> do impacto financeiro total</div>
+            </div>
+            <div class="chart-mini-kpis">
+              <div class="mini-kpi"><span class="mini-val" style="color:#F6AD55">R$2,6M</span><span class="mini-lbl">total</span></div>
+              <div class="mini-kpi"><span class="mini-val" style="color:#4A6378">3</span><span class="mini-lbl">com custo</span></div>
+            </div>
+          </div>
+          <div class="chart-wrap"><canvas id="chartCusto" role="img" aria-label="Custo por projeto"></canvas></div>
+        </div>
+
+        <!-- Card 4: Status aprovações -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <div class="section-title">Status das aprovações</div>
+              <div class="chart-insight"><span style="color:#FC8181;font-weight:600">1 pendente</span> e <span style="color:#F6AD55;font-weight:600">1 em andamento</span> requerem atenção</div>
+            </div>
+            <div class="chart-mini-kpis">
+              <div class="mini-kpi"><span class="mini-val" style="color:#68D391">22</span><span class="mini-lbl">aprovadas</span></div>
+              <div class="mini-kpi"><span class="mini-val" style="color:#FC8181">1</span><span class="mini-lbl">pendente</span></div>
+              <div class="mini-kpi"><span class="mini-val" style="color:#F6AD55">1</span><span class="mini-lbl">andamento</span></div>
+            </div>
+          </div>
+          <div class="chart-wrap"><canvas id="chartStatus" role="img" aria-label="Status das aprovações"></canvas></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══ ABA 3: DETALHES POR PROJETO ═══ -->
+    <div class="tab-panel" id="tab3">
       <div class="tab3-inner">
+
+        <!-- Project selector tabs -->
         <div class="proj-tabs">
           <button class="proj-tab active" onclick="showProj('multigateways',this)">Multigateways Adquirentes</button>
           <button class="proj-tab" onclick="showProj('upgo',this)">Ampliação UP GO</button>
@@ -339,387 +474,223 @@ tbody td{padding:16px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,
           <button class="proj-tab" onclick="showProj('bid',this)">Planejamento BID</button>
           <button class="proj-tab" onclick="showProj('feira',this)">UP Feira de Santana</button>
         </div>
+
+        <!-- Detail panel -->
         <div class="proj-detail">
           <div class="proj-detail-header">
             <div>
               <div class="proj-detail-name" id="detailName">Multigateways Adquirentes</div>
-              <div class="proj-detail-meta" id="detailMeta">GP: Renata Candido Marques</div>
-              <div class="proj-detail-stats" id="detailStats"></div>
+              <div class="proj-detail-meta" id="detailMeta">GP: Renata Candido Marques · Ref. Artia: 24T021</div>
+              <div class="proj-detail-stats" id="detailStats">
+                <div class="proj-stat"><span class="proj-stat-val" style="color:#63B3ED">12</span><span class="proj-stat-lbl">Mudanças</span></div>
+                <div class="proj-stat"><span class="proj-stat-val" style="color:#F6AD55">R$138K</span><span class="proj-stat-lbl">Custo adicional</span></div>
+              </div>
             </div>
           </div>
           <div class="detail-tbl-wrap">
-            <table class="detail-table">
-              <thead><tr>
-                <th style="width:4%">#</th>
-                <th style="width:32%">Descrição da Mudança</th>
-                <th style="width:9%">Tipo</th>
-                <th style="width:11%">Custo (R$)</th>
-                <th style="width:10%">Prazo (dias)</th>
-                <th style="width:11%">Responsável</th>
-                <th style="width:10%">Aprovador</th>
-                <th style="width:13%">Status</th>
-              </tr></thead>
+            <table class="detail-table" id="detailTable">
+              <thead>
+                <tr>
+                  <th style="width:4%">#</th>
+                  <th style="width:32%">Descrição da Mudança</th>
+                  <th style="width:9%">Tipo</th>
+                  <th style="width:11%">Custo (R$)</th>
+                  <th style="width:10%">Prazo (dias)</th>
+                  <th style="width:11%">Responsável</th>
+                  <th style="width:10%">Aprovador</th>
+                  <th style="width:13%">Status</th>
+                </tr>
+              </thead>
               <tbody id="detailBody"></tbody>
             </table>
           </div>
         </div>
       </div>
     </div>
+
   </div><!-- /main -->
 </div><!-- /layout -->
 
 <script>
 // ── DATA ─────────────────────────────────────────────────
-const PROJECTS = {};
-const FULL_DATA = {};
+const PROJECTS = {
+  multigateways: {
+    name: "Multigateways Adquirentes",
+    meta: "GP: Renata Candido Marques · Ref. Artia: 24T021",
+    stats: { qtd:12, custo:"R$138K", impedeN:11, impedeT:12, aprovN:12, pendN:0, cancelN:0 },
+    rows: [
+      [1,"Desenvolvimento leitura e importação arquivo CNAB750 no conciliador DB PAY","Custo","20.100","—","Vinicius R.","Lucas S.","Aprovado"],
+      [2,"Requisitos PCI DSS — proteção de dados de pagamento","Custo","17.100","—","Vinicius R.","Lucas S.","Aprovado"],
+      [3,"Adequação integração API proprietária da Rede (substituição MaxiPago)","Custo","15.000","—","Vinicius R.","Anna N.","Aprovado"],
+      [4,"Aprovação OPEX recorrente MongoDB e Kafka (PRD/HOM/DEV)","Escopo","—","—","Vinicius R.","Lucas S.","Aprovado"],
+      [5,"Implantação WAF Akamai — requisito PCI DSS 1.4.1 e 6.4.2","Custo","37.800","—","Celso Q.","Lucas S.","Aprovado"],
+      [6,"Substituição Google Pub/Sub por Kafka — alinhamento arquitetural","Escopo","—","—","Vinicius R.","Lucas S.","Aprovado"],
+      [7,"Evolução Portal Toxicológico — integração novo gateway de pagamento","Escopo","—","Go Live 27/04","Denise M.","Lucas S.","Aprovado"],
+      [8,"Nova integração webhook Getnet — modelo anterior depreciado","Custo","12.000","—","Vinicius R.","Lucas S.","Aprovado"],
+      [9,"API PIX depreciada — ajustes escopo instituições financeiras","Custo","15.000","—","Vinicius R.","Lucas S.","Aprovado"],
+      [10,"Ajustes técnicos e de segurança conforme relatório Pentest/PCI","Custo","21.080","—","Vinicius R.","Lucas S.","Aprovado"],
+      [11,"Reprogramação Go Live DBCash: 06/04 → 25/05 a 01/06/2026","Prazo","—","50 dias","Vinicius R.","Lucas S.","Aprovado"],
+      [12,"Reprogramação Go Live Portal Toxicológico: 27/04 → 25/05 a 01/06","Prazo","—","30 dias","Denise M.","Lucas S.","Aprovado"],
+    ]
+  },
+  upgo: {
+    name: "Ampliação UP GO",
+    meta: "GP: Renata Candido Marques · Ref. Artia: 6142325",
+    stats: { qtd:10, custo:"R$2,29M", impedeN:10, impedeT:10, aprovN:9, pendN:0, cancelN:0 },
+    rows: [
+      [1,"Inclusão custos TI e itens almoxarifado não previstos inicialmente","Custo","866.712","—","Alexandre M.","Tobias","Aprovado"],
+      [2,"Incremento custo Câmara Fria e Execução Civil para Almoxarifado","Custo","182.889","—","Osmar A.","Aureliano","Aprovado"],
+      [3,"Incremento custo Mezanino acima da Câmara Fria para Almoxarifado","Custo","133.049","—","Osmar A.","Aureliano","Aprovado"],
+      [4,"Inclusão custo movimentação de equipamentos na área produtiva","Custo","107.861","—","Luciano F.","Aureliano","Aprovado"],
+      [5,"Acréscimo custo Isopainel Fechamento do novo almoxarifado","Custo","23.860","—","Osmar A.","Aureliano","Aprovado"],
+      [6,"Acréscimo custo execução Mezanino e Execução Civil área técnica","Custo","524.000","—","Osmar A.","Aureliano","Aprovado"],
+      [7,"Inclusão custo piso epoxi e parede drywall — área técnica","Custo","90.000","—","Osmar A.","Aureliano","Aprovado"],
+      [8,"Ajuste de custo para Elétrica — área técnica","Custo","180.000","—","Osmar A.","Aureliano","Aprovado"],
+      [9,"Alteração prazo Fase 3 — área técnica: 30/09 → 31/07 (antecipação)","Tempo","—","−61 dias","Osmar A.","Aureliano","Em andamento"],
+      [10,"Adequação escopo TI — cabeamento estruturado rede e fibra","Custo","181.575","—","Rafael V.","Lucas S.","Aprovado"],
+    ]
+  },
+  sexagem: {
+    name: "Desc. Sexagem Fetal",
+    meta: "GP: Adriano Braga Claro · Ref. Artia: 6062389",
+    stats: { qtd:2, custo:"R$205K", impedeN:2, impedeT:2, aprovN:1, pendN:1, cancelN:0 },
+    rows: [
+      [1,"Inclusão orçamento CAPEX+OPEX — pacote de aquisições e instalação infraestrutura TI","Custo","205.317","—","Alexandre M.","Gustavo A.","Pendente"],
+      [2,"Prorrogação Go Live unidade MOL: 05/01/2026 → 19/01/2026","Prazo","—","14 dias","Cristina P.","Gustavo A.","Aprovado"],
+    ]
+  },
+  jornada: {
+    name: "Jornada da Amostra",
+    meta: "GP: Guilherme Fabre · Ref. Artia: 6164684",
+    stats: { qtd:1, custo:"—", impedeN:1, impedeT:1, aprovN:0, pendN:0, cancelN:0 },
+    rows: [
+      [1,"Implantação encapsulamento de lotes para fluxo de transbordo e alteração de telas de triagem","Tempo","—","60 dias","Édison","Tobias","Em andamento"],
+    ]
+  },
+  bid: {
+    name: "Planejamento BID",
+    meta: "GP: Marcel Petersen · Ref. Artia: 5555176",
+    stats: { qtd:1, custo:"—", impedeN:1, impedeT:1, aprovN:1, pendN:0, cancelN:0 },
+    rows: [
+      [1,"Disponibilização da obra — laboratórios (atraso por troca de CNPJ e novo processo de ligação de energia CPFL)","Tempo","—","45 dias","—","Tobias","Ok"],
+    ]
+  },
+  feira: {
+    name: "UP Feira de Santana",
+    meta: "GP: Marcel Petersen · Ref. Artia: 5532352",
+    stats: { qtd:1, custo:"—", impedeN:1, impedeT:1, aprovN:1, pendN:0, cancelN:0 },
+    rows: [
+      [1,"Disponibilização da obra — laboratórios (atraso por troca de CNPJ e novo processo de ligação de energia CPFL)","Tempo","—","45 dias","—","Tobias","Ok"],
+    ]
+  }
+};
 
-const STATUS_CLASS = { "Aprovado":"p-green","aprovado":"p-green","Ok":"p-green","ok":"p-green","Pendente":"p-red","pendente":"p-red","Em andamento":"p-amber","Em Andamento":"p-amber","Andamento":"p-amber","—":"p-gray" };
+const STATUS_CLASS = { "Aprovado":"p-green","aprovado":"p-green","Ok":"p-green","Pendente":"p-red","pendente":"p-red","Em andamento":"p-amber","Em Andamento":"p-amber","Andamento":"p-amber","—":"p-gray" };
 const TIPO_CLASS   = { "Custo":"p-amber","Tempo":"p-blue","Escopo":"p-purple","Prazo":"p-gray" };
 
-// ── FILTROS POR CLIQUE NO GRÁFICO ────────────────────────
-let filtroAtivo = null;
-
-function mostrarFiltroAtivo(label, tipo) {
-  // Remove badge anterior se existir
-  const old = document.getElementById('filtroAtivoBadge');
-  if (old) old.remove();
-
-  if (!label) return;
-
-  const header = document.querySelector('.table-header');
-  const badge = document.createElement('div');
-  badge.id = 'filtroAtivoBadge';
-  badge.style.cssText = 'display:flex;align-items:center;gap:8px;margin-left:10px';
-  badge.innerHTML = `
-    <span style="font-size:10px;color:#4A6378">Filtro:</span>
-    <span style="font-size:11px;font-weight:600;background:#1E2D3D;color:#63B3ED;padding:3px 10px;border-radius:20px;border:1px solid #63B3ED">
-      ${label}
-    </span>
-    <span onclick="resetFiltroTabela()" style="font-size:11px;color:#3D5166;cursor:pointer;padding:2px 6px;border-radius:4px;hover:color:#E2E8F0" title="Limpar filtro">✕</span>
-  `;
-  header.appendChild(badge);
+// ── NAVEGAÇÃO ABAS ────────────────────────────────────────
+function showTab(n, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab' + n).classList.add('active');
+  btn.classList.add('active');
+  if (n === 2) initCharts();
 }
 
-function filtrarTabelaPorProjeto(nomeLabel) {
-  // Limpa filtros dos botões
+// ── FILTROS TABELA ABA 1 ──────────────────────────────────
+function filterTable(tipo, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.filter-btn').classList.add('active'); // "Todos" ativo visualmente
-
-  filtroAtivo = { tipo: 'projeto', valor: nomeLabel };
-  mostrarFiltroAtivo(nomeLabel, 'projeto');
-
+  btn.classList.add('active');
   document.querySelectorAll('#mainTable tbody tr').forEach(tr => {
-    const nome = tr.querySelector('.proj-name');
-    if (!nome) return;
-    const match = nome.textContent.toLowerCase().includes(nomeLabel.toLowerCase().replace('projeto ',''));
-    tr.classList.toggle('hidden', !match);
+    if (tipo === 'todos' || tr.dataset.tipo === tipo) tr.classList.remove('hidden');
+    else tr.classList.add('hidden');
   });
 }
 
-function filtrarTabelaPorTipo(tipo) {
-  document.querySelectorAll('.filter-btn').forEach(b => {
-    b.classList.toggle('active', b.textContent.trim().toLowerCase() === tipo.toLowerCase());
-  });
-
-  filtroAtivo = { tipo: 'tipo', valor: tipo };
-
-  let totalTipo = 0;
-  document.querySelectorAll('#mainTable tbody tr').forEach(tr => {
-    const onclick = tr.getAttribute('onclick') || '';
-    const projId = onclick.match(/'([^']+)'/)?.[1];
-    if (!projId || !PROJECTS[projId]) return;
-
-    // Conta mudanças desse tipo nesse projeto
-    const count = (PROJECTS[projId].rows || []).filter(r =>
-      r[2] && r[2].toLowerCase() === tipo.toLowerCase()
-    ).length;
-
-    if (count > 0) {
-      tr.classList.remove('hidden');
-      totalTipo += count;
-      const qtdEl = tr.querySelector('.pill.p-blue');
-      if (qtdEl) qtdEl.textContent = count;
-    } else {
-      tr.classList.add('hidden');
-    }
-  });
-
-  mostrarFiltroAtivo(`${tipo} (${totalTipo} mudanças)`, 'tipo');
+// ── NAVEGAR PARA DETALHE (clique na linha da tabela) ──────
+function goDetail(projId) {
+  // ativa aba 3
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab3').classList.add('active');
+  document.querySelectorAll('.sb-btn')[2].classList.add('active');
+  // seleciona o projeto
+  const btn = document.querySelector(`.proj-tab[onclick*="${projId}"]`);
+  document.querySelectorAll('.proj-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderDetail(projId);
 }
 
-function filtrarTabelaPorStatus(status) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.filter-btn').classList.add('active');
-
-  filtroAtivo = { tipo: 'status', valor: status };
-  mostrarFiltroAtivo(status, 'status');
-
-  document.querySelectorAll('#mainTable tbody tr').forEach(tr => {
-    const statusEl = tr.querySelector('.pill.p-green, .pill.p-red, .pill.p-amber, .pill.p-gray');
-    if (!statusEl) return;
-    const match = statusEl.textContent.trim().toLowerCase().includes(status.toLowerCase());
-    tr.classList.toggle('hidden', !match);
-  });
+// ── DETALHES POR PROJETO ──────────────────────────────────
+function showProj(projId, btn) {
+  document.querySelectorAll('.proj-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderDetail(projId);
 }
 
-function resetFiltroTabela() {
-  filtroAtivo = null;
-  mostrarFiltroAtivo(null);
-  document.querySelectorAll('#mainTable tbody tr').forEach(tr => {
-    tr.classList.remove('hidden');
-    // Restaura QTD original
-    const onclick = tr.getAttribute('onclick') || '';
-    const projId = onclick.match(/'([^']+)'/)?.[1];
-    if (projId && PROJECTS[projId]) {
-      const qtdEl = tr.querySelector('.pill.p-blue');
-      if (qtdEl) qtdEl.textContent = PROJECTS[projId].stats.qtd;
-    }
-  });
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.filter-btn').classList.add('active');
-}
+function renderDetail(projId) {
+  const p = PROJECTS[projId];
+  if (!p) return;
+  document.getElementById('detailName').textContent = p.name;
+  document.getElementById('detailMeta').textContent = p.meta;
 
-// ── MODAL FUNCTIONS ───────────────────────────────────────
-function openModal(projId, rowNum) {
-  const data = FULL_DATA[projId];
-  if (!data) return;
-  const r = data.find(d => d.num === rowNum);
-  if (!r) return;
+  const statsEl = document.getElementById('detailStats');
+  const st = p.stats;
+  const emAndamento = st.qtd - st.aprovN - st.pendN;
 
-  const proj = PROJECTS[projId];
-  document.getElementById('modalTitle').textContent = `Mudança #${r.num} — ${proj.name}`;
-  document.getElementById('modalSubtitle').textContent = proj.meta;
-
-  const sc = STATUS_CLASS[r.status] || 'p-gray';
-  const tc = TIPO_CLASS[r.classificacao] || 'p-gray';
-
-  document.getElementById('modalBody').innerHTML = `
-    <div class="modal-tags" style="margin-bottom:16px">
-      <span class="pill ${tc}">${r.classificacao}</span>
-      <span class="pill ${sc}">${r.status}</span>
-      <span class="pill p-gray">Prioridade: ${r.prioridade}</span>
-      ${r.impede.toLowerCase().includes('sim') ? '<span class="pill p-red">Impede implantação</span>' : '<span class="pill p-gray">Não impede</span>'}
+  statsEl.innerHTML = `
+    <div class="proj-stat">
+      <span class="proj-stat-val" style="color:#63B3ED">${st.qtd}</span>
+      <span class="proj-stat-lbl">Mudanças</span>
     </div>
-    <div class="modal-grid">
-      <div class="modal-field full">
-        <div class="modal-label">Descrição da Solicitação</div>
-        <div class="modal-value long">${r.desc}</div>
-      </div>
-      <div class="modal-field full">
-        <div class="modal-label">Justificativa</div>
-        <div class="modal-value long">${r.just !== '—' ? r.just : '<span style="color:#3D5166;font-style:italic">Não informada</span>'}</div>
-      </div>
-      <div class="modal-field">
-        <div class="modal-label">Quem Solicitou</div>
-        <div class="modal-value">${r.solicitante}</div>
-      </div>
-      <div class="modal-field">
-        <div class="modal-label">Data da Solicitação</div>
-        <div class="modal-value">${r.data_solic}</div>
-      </div>
-      <div class="modal-field">
-        <div class="modal-label">Responsável</div>
-        <div class="modal-value">${r.responsavel}</div>
-      </div>
-      <div class="modal-field">
-        <div class="modal-label">Aprovador (Sponsor)</div>
-        <div class="modal-value">${r.aprovador}</div>
-      </div>
-      <div class="modal-field">
-        <div class="modal-label">Data de Aprovação</div>
-        <div class="modal-value">${r.data_aprov}</div>
-      </div>
-      <div class="modal-field">
-        <div class="modal-label">Custo Estimado (R$)</div>
-        <div class="modal-value" style="color:#F6AD55;font-weight:600">${r.custo !== '—' ? 'R$ '+r.custo : '—'}</div>
-      </div>
-      <div class="modal-field">
-        <div class="modal-label">Impacto no Prazo</div>
-        <div class="modal-value" style="color:${r.prazo!=='—'?'#F6AD55':'#4A6378'}">${r.prazo}</div>
-      </div>
+    <div class="proj-stat">
+      <span class="proj-stat-val" style="color:#F6AD55">${st.custo}</span>
+      <span class="proj-stat-lbl">Custo adicional</span>
     </div>
+    <div class="proj-stat">
+      <span class="proj-stat-val" style="color:#FC8181">${st.impedeN}/${st.impedeT}</span>
+      <span class="proj-stat-lbl">Impedem implant.</span>
+    </div>
+    <div class="proj-stat">
+      <span class="proj-stat-val" style="color:#68D391">${st.aprovN}
+        <span style="font-size:14px;font-weight:400;color:#3D5166"> / ${st.qtd}</span>
+      </span>
+      <span class="proj-stat-lbl">Aprovadas</span>
+    </div>
+    ${st.pendN > 0 ? `<div class="proj-stat"><span class="proj-stat-val" style="color:#FC8181">${st.pendN}</span><span class="proj-stat-lbl">Pendente(s)</span></div>` : ''}
+    ${emAndamento > 0 ? `<div class="proj-stat"><span class="proj-stat-val" style="color:#F6AD55">${emAndamento}</span><span class="proj-stat-lbl">Em andamento</span></div>` : ''}
   `;
 
-  document.getElementById('modalOverlay').classList.add('open');
+  const tbody = document.getElementById('detailBody');
+  tbody.innerHTML = p.rows.map(r => {
+    const isPend  = r[7]==='Pendente' || r[7]==='pendente';
+    const isAndamento = r[7]==='Em andamento' || r[7]==='Em Andamento' || r[7]==='Andamento';
+    const rowBg = isPend ? 'background:rgba(252,129,129,0.06);border-left:2px solid #FC8181;' : isAndamento ? 'background:rgba(246,173,85,0.06);border-left:2px solid #F6AD55;' : '';
+    return `
+    <tr style="${rowBg}">
+      <td style="color:#3D5166;padding-left:${isPend||isAndamento?'10px':'0'}">${r[0]}</td>
+      <td><div class="desc-text">${r[1]}</div></td>
+      <td><span class="pill ${TIPO_CLASS[r[2]]||'p-gray'}">${r[2]}</span></td>
+      <td class="mono">${r[3] !== '—' ? 'R$ '+r[3] : '—'}</td>
+      <td style="color:${r[4]!=='—'?'#F6AD55':'#2D4459'}">${r[4]}</td>
+      <td>${r[5]}</td>
+      <td style="color:#4A6378">${r[6]}</td>
+      <td><span class="pill ${STATUS_CLASS[r[7]]||'p-gray'}">${r[7]}</span></td>
+    </tr>`;
+  }).join('');
 }
 
-function closeModal(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModalBtn();
-}
-function closeModalBtn() {
-  document.getElementById('modalOverlay').classList.remove('open');
-}
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeModalBtn(); });
-
-// ── WORKER URL ────────────────────────────────────────────
-const WORKER_URL = 'https://pmo-mudancas.vitormanu-dl05.workers.dev';
-
-// ── VARIÁVEIS GLOBAIS DOS GRÁFICOS ────────────────────────
-var chartsInited = false;
-var chartProjInstance = null;
-var chartTipoInstance = null;
-var chartCustoInstance = null;
-var chartStatusInstance = null;
-
-// ── INIT: busca dados do Worker ───────────────────────────
-async function carregarDados() {
-  const loading = document.getElementById('loadingOverlay');
-  if (loading) loading.style.display = 'flex';
-
-  try {
-    const res = await fetch(WORKER_URL + '/data');
-    const data = await res.json();
-
-    if (!data.ok) {
-      mostrarErro('Nenhum dado encontrado. Execute o VBA para sincronizar.');
-      return;
-    }
-
-    // Reconstrói PROJECTS e FULL_DATA a partir do Worker
-    const projetosWorker = data.projetos;
-    const kpis = data.kpis;
-
-    // Atualiza KPIs
-    document.querySelector('.kpi-blue .kpi-val').textContent   = kpis.total_mudancas;
-    document.querySelector('.kpi-blue .kpi-sub').textContent   = 'em ' + kpis.total_projetos + ' projetos ativos';
-
-    const custoFmt = kpis.total_custo >= 1000000
-      ? 'R$' + (kpis.total_custo / 1000000).toFixed(1) + 'M'
-      : 'R$' + (kpis.total_custo / 1000).toFixed(0) + 'K';
-    document.querySelector('.kpi-amber .kpi-val').textContent  = custoFmt;
-
-    document.querySelector('.kpi-red .kpi-val').textContent    = kpis.impede_pct + '%';
-    document.querySelector('.kpi-red .kpi-sub').textContent    = kpis.impede_n + ' de ' + kpis.total_mudancas + ' mudanças';
-
-    document.querySelector('.kpi-green .kpi-val').textContent  = kpis.aprov_pct + '%';
-    document.querySelector('.kpi-green .kpi-sub').textContent  = kpis.aprov_n + ' de ' + kpis.total_mudancas + ' aprovadas';
-
-    // Atualiza topbar
-    document.querySelector('.topbar-right').textContent = kpis.total_mudancas + ' mudanças · ' + kpis.total_projetos + ' projetos';
-
-    // Reconstrói tabela Aba 1
-    const tbody = document.querySelector('#mainTable tbody');
-    tbody.innerHTML = '';
-    console.log('Projetos recebidos:', projetosWorker.length);
-    projetosWorker.forEach((p, idx) => {
-      try {
-      // Tipo predominante — pega o mais frequente nas rows
-      const tipoFreq = {};
-      (p.rows || []).forEach(r => { if(r.classificacao) tipoFreq[r.classificacao] = (tipoFreq[r.classificacao]||0)+1; });
-      const tipoLabel = Object.keys(tipoFreq).sort((a,b)=>tipoFreq[b]-tipoFreq[a])[0] || '—';
-      const tipoClass = TIPO_CLASS[tipoLabel] || 'p-gray';
-      const statusMaior = p.pend_n > 0 ? 'Pendente' : p.andam_n > 0 ? 'Em andamento' : 'Aprovado';
-      const scClass    = STATUS_CLASS[statusMaior] || 'p-green';
-      const custoFmt   = p.custo_total > 0 ? 'R$ ' + p.custo_total.toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:0}) : '—';
-      const tr = document.createElement('tr');
-      tr.dataset.tipo = tipoLabel;
-      tr.onclick = () => goDetail(p.id);
-      tr.setAttribute('onclick', `goDetail('${p.id}')`);
-      tr.innerHTML = `
-        <td><div class="proj-name">${p.nome.replace('Projeto ','')}</div><div class="proj-gp">${p.gp}</div></td>
-        <td><span class="pill p-blue">${p.qtd}</span></td>
-        <td class="mono">${custoFmt}</td>
-        <td><span class="pill ${tipoClass}">${tipoLabel}</span></td>
-        <td><span class="pill ${scClass}">${statusMaior}</span></td>
-        <td><span class="pill p-red">Sim — ${p.impede_n} de ${p.qtd}</span></td>
-      `;
-      tbody.appendChild(tr);
-      console.log('Linha adicionada:', p.nome);
-      } catch(e) { console.error('Erro na linha', idx, e); }
-    });
-
-    // Reconstrói abas de projetos (Aba 2)
-    const projTabsEl = document.querySelector('.proj-tabs');
-    projTabsEl.innerHTML = '';
-    projetosWorker.forEach((p, idx) => {
-      const btn = document.createElement('button');
-      btn.className = 'proj-tab' + (idx === 0 ? ' active' : '');
-      btn.textContent = p.nome.replace('Projeto ', '');
-      btn.onclick = () => showProj(p.id, btn);
-      projTabsEl.appendChild(btn);
-    });
-
-    // Substitui PROJECTS e FULL_DATA globais com dados do Worker
-    projetosWorker.forEach(p => {
-      PROJECTS[p.id] = {
-        name: p.nome.replace('Projeto ', ''),
-        meta: 'GP: ' + p.gp + ' · Ref. Artia: ' + p.ref,
-        stats: {
-          qtd:     p.qtd,
-          custo:   p.custo_fmt,
-          impedeN: p.impede_n,
-          impedeT: p.qtd,
-          aprovN:  p.aprov_n,
-          pendN:   p.pend_n,
-          cancelN: 0
-        },
-        rows: (p.rows || []).map(r => [
-          r.num, r.desc, r.classificacao || '—', r.custo || '—', r.prazo || '—', r.responsavel || '—', r.aprovador || '—', r.status || '—'
-        ])
-      };
-      FULL_DATA[p.id] = p.rows || [];
-    });
-
-    // Atualiza última atualização
-    if (data.ultima_atualizacao) {
-      const dt = new Date(data.ultima_atualizacao);
-      const fmt = dt.toLocaleDateString('pt-BR') + ' · ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
-      document.querySelector('.topbar-sub').textContent += ' · Atualizado em ' + fmt;
-    }
-
-    // Renderiza primeiro projeto (PROJECTS já populado) e gráficos
-    if (projetosWorker.length > 0) {
-      const firstId = projetosWorker[0].id;
-      const firstTab = document.querySelector('.proj-tab');
-      if (firstTab) firstTab.classList.add('active');
-      renderDetail(firstId);
-      // Destroi instâncias antigas antes de recriar
-      [chartProjInstance, chartTipoInstance, chartCustoInstance, chartStatusInstance].forEach(c => { if(c) c.destroy(); });
-      chartProjInstance = chartTipoInstance = chartCustoInstance = chartStatusInstance = null;
-      chartsInited = false;
-      // Pequeno delay para o canvas resetar antes de recriar
-      setTimeout(() => atualizarGraficos(projetosWorker, kpis), 200);
-    }
-
-  } catch (e) {
-    mostrarErro('Erro ao conectar com o servidor: ' + e.message);
-  } finally {
-    if (loading) loading.style.display = 'none';
-  }
-}
-
-function mostrarErro(msg) {
-  const loading = document.getElementById('loadingOverlay');
-  if (loading) {
-    loading.innerHTML = `
-      <div style="text-align:center">
-        <div style="font-size:32px;margin-bottom:12px">⚠️</div>
-        <div style="font-size:14px;color:#FC8181;font-weight:600;margin-bottom:8px">Dados não encontrados</div>
-        <div style="font-size:12px;color:#4A6378;max-width:300px">${msg}</div>
-        <button onclick="carregarDados()" style="margin-top:16px;padding:8px 20px;background:#1E2D3D;border:1px solid #63B3ED;color:#63B3ED;border-radius:8px;cursor:pointer;font-size:12px">Tentar novamente</button>
-      </div>
-    `;
-    loading.style.display = 'flex';
-  }
-}
-
-function initCharts(
-  projLabels, projValues, custoLabels, custoValues,
-  tipoValues, statusValues, kpis
-) {
-  if (chartsInited) {
-    if (chartProjInstance)   { chartProjInstance.data.labels = projLabels; chartProjInstance.data.datasets[0].data = projValues; chartProjInstance.update(); }
-    if (chartTipoInstance)   { chartTipoInstance.data.datasets[0].data = tipoValues; chartTipoInstance.update(); }
-    if (chartCustoInstance)  { chartCustoInstance.data.labels = custoLabels; chartCustoInstance.data.datasets[0].data = custoValues; chartCustoInstance.update(); }
-    if (chartStatusInstance) { chartStatusInstance.data.datasets[0].data = statusValues; chartStatusInstance.update(); }
-    return;
-  }
+// ── GRÁFICOS ABA 2 ────────────────────────────────────────
+let chartsInited = false;
+function initCharts() {
+  if (chartsInited) return;
   chartsInited = true;
 
-  const gc = (color) => ({ color, font: { size: 10, family: 'Inter' } });
+  const gc = (color) => ({ color, font: { size: 11, family: 'Inter' } });
   const gridC = 'rgba(255,255,255,0.05)';
   const base = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } };
 
+  // Plugin: centro do doughnut
   const centerTextPlugin = {
     id:'centerText',
     afterDraw(chart) {
@@ -737,137 +708,142 @@ function initCharts(
   };
   Chart.register(centerTextPlugin);
 
-  // 1 — Volume por projeto
-  chartProjInstance = new Chart(document.getElementById('chartProj'), {
+  // 1 — Mudanças por projeto (barras com valor em cima)
+  new Chart(document.getElementById('chartProj'), {
     type:'bar',
-    data:{ labels: projLabels, datasets:[{ data: projValues, backgroundColor: projValues.map((v,i) => i<2?'#63B3ED':'#4A6378'), borderRadius:5 }] },
-    options:{...base, layout:{ padding:{ top:20 } },
+    data:{
+      labels:['Multigateways','Ampliação\nUP GO','Sex.\nFetal','Jornada','BID','Feira ST'],
+      datasets:[{
+        data:[12,10,2,1,1,1],
+        backgroundColor:['#63B3ED','#63B3ED','#4A6378','#4A6378','#4A6378','#4A6378'],
+        borderRadius:5
+      }]
+    },
+    options:{...base,
+      layout:{ padding:{ top:20 } },
       scales:{
         x:{ grid:{display:false}, ticks:{ ...gc('#4A6378'), maxRotation:0 } },
-        y:{ grid:{color:gridC}, ticks:gc('#4A6378'), beginAtZero:true }
+        y:{ grid:{color:gridC}, ticks:gc('#4A6378'), beginAtZero:true, suggestedMax:14 }
       },
-      onClick(evt, elements) { if (!elements.length) { resetFiltroTabela(); return; } filtrarTabelaPorProjeto(chartProjInstance.data.labels[elements[0].index]); },
-      onHover(evt, elements) { evt.native.target.style.cursor = elements.length ? 'pointer' : 'default'; }
+      plugins:{
+        legend:{display:false},
+        tooltip:{ callbacks:{ label: c => ` ${c.parsed.y} mudanças` } },
+        datalabels: false
+      }
     },
-    plugins:[{ id:'barLabels', afterDatasetsDraw(chart) {
-      const { ctx } = chart;
-      chart.data.datasets.forEach((ds, di) => {
-        chart.getDatasetMeta(di).data.forEach((bar, i) => {
-          ctx.save(); ctx.font='bold 12px Inter'; ctx.fillStyle='#CBD5E0'; ctx.textAlign='center'; ctx.textBaseline='bottom';
-          ctx.fillText(ds.data[i], bar.x, bar.y - 4); ctx.restore();
+    plugins:[{
+      id:'barLabels',
+      afterDatasetsDraw(chart) {
+        const { ctx } = chart;
+        chart.data.datasets.forEach((ds, di) => {
+          chart.getDatasetMeta(di).data.forEach((bar, i) => {
+            const val = ds.data[i];
+            ctx.save();
+            ctx.font = 'bold 12px Inter';
+            ctx.fillStyle = '#CBD5E0';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(val, bar.x, bar.y - 4);
+            ctx.restore();
+          });
         });
-      });
-    }}]
+      }
+    }]
   });
 
-  // 2 — Tipo de mudança
-  chartTipoInstance = new Chart(document.getElementById('chartTipo'), {
+  // 2 — Tipo de mudança (doughnut com centro)
+  new Chart(document.getElementById('chartTipo'), {
     type:'doughnut',
-    data:{ labels:['Custo','Tempo','Escopo','Prazo'], datasets:[{ data: tipoValues, backgroundColor:['#F6AD55','#63B3ED','#B794F4','#FC8181'], borderWidth:0, hoverOffset:6 }] },
-    options:{...base, cutout:'65%', layout:{ padding:{ top:8, bottom:8 } },
-      centerText:{ value: String(tipoValues.reduce((a,b)=>a+b,0)), label:'mudanças' },
-      onClick(evt, elements) { if (!elements.length) { resetFiltroTabela(); return; } filtrarTabelaPorTipo(chartTipoInstance.data.labels[elements[0].index]); },
-      onHover(evt, elements) { evt.native.target.style.cursor = elements.length ? 'pointer' : 'default'; },
-      plugins:{ legend:{ display:true, position:'right', labels:{ color:'#A0AEC0', font:{size:11,family:'Inter'}, boxWidth:10, padding:12,
-        generateLabels(chart) { const ds = chart.data.datasets[0]; return chart.data.labels.map((lbl,i) => ({ text:`${lbl}  ${ds.data[i]}`, fillStyle:ds.backgroundColor[i], strokeStyle:'transparent', lineWidth:0, index:i, fontColor:'#A0AEC0' })); }
-      }}}
+    data:{
+      labels:['Custo','Tempo','Escopo','Prazo'],
+      datasets:[{ data:[17,4,3,1], backgroundColor:['#F6AD55','#63B3ED','#B794F4','#FC8181'], borderWidth:0, hoverOffset:6 }]
+    },
+    options:{...base, cutout:'65%',
+      layout:{ padding:{ top:8, bottom:8 } },
+      centerText:{ value:'27', label:'mudanças' },
+      plugins:{
+        legend:{ display:true, position:'right', labels:{ color:'#A0AEC0', font:{size:11,family:'Inter'}, boxWidth:10, padding:12,
+          generateLabels(chart) {
+            const ds = chart.data.datasets[0];
+            return chart.data.labels.map((lbl,i) => ({
+              text: `${lbl}  ${ds.data[i]}`,
+              fillStyle: ds.backgroundColor[i],
+              strokeStyle: 'transparent', lineWidth:0, index:i,
+              fontColor:'#A0AEC0'
+            }));
+          }
+        }}
+      }
     }
   });
 
-  // 3 — Custo por projeto
-  chartCustoInstance = new Chart(document.getElementById('chartCusto'), {
+  // 3 — Custo por projeto (horizontal bar com valor)
+  new Chart(document.getElementById('chartCusto'), {
     type:'bar',
-    data:{ labels: custoLabels, datasets:[{ data: custoValues, backgroundColor:['#F6AD55','#63B3ED','#68D391','#B794F4'], borderRadius:5 }] },
+    data:{
+      labels:['Ampliação UP GO','Desc. Sexagem Fetal','Multigateways'],
+      datasets:[{ data:[2289946,205317,138080], backgroundColor:['#F6AD55','#63B3ED','#68D391'], borderRadius:5 }]
+    },
     options:{...base, indexAxis:'y',
       scales:{
         x:{ grid:{color:gridC}, ticks:{ ...gc('#4A6378'), callback: v => 'R$'+(v>=1000000?(v/1000000).toFixed(1)+'M':(v/1000).toFixed(0)+'K') } },
         y:{ grid:{display:false}, ticks:gc('#A0AEC0') }
       },
-      onClick(evt, elements) { if (!elements.length) { resetFiltroTabela(); return; } filtrarTabelaPorProjeto(chartCustoInstance.data.labels[elements[0].index]); },
-      onHover(evt, elements) { evt.native.target.style.cursor = elements.length ? 'pointer' : 'default'; },
-      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: c=>' R$ '+c.parsed.x.toLocaleString('pt-BR') } } }
+      plugins:{
+        legend:{display:false},
+        tooltip:{ callbacks:{ label: c => ' R$ '+c.parsed.x.toLocaleString('pt-BR') } }
+      }
     },
-    plugins:[{ id:'hbarLabels', afterDatasetsDraw(chart) {
-      const { ctx } = chart;
-      chart.data.datasets.forEach((ds, di) => {
-        chart.getDatasetMeta(di).data.forEach((bar, i) => {
-          const val = ds.data[i];
-          const label = val>=1000000?'R$'+(val/1000000).toFixed(2)+'M':'R$'+(val/1000).toFixed(0)+'K';
-          ctx.save(); ctx.font='bold 11px Inter'; ctx.fillStyle='#CBD5E0'; ctx.textAlign='left'; ctx.textBaseline='middle';
-          ctx.fillText(label, bar.x + 8, bar.y); ctx.restore();
+    plugins:[{
+      id:'hbarLabels',
+      afterDatasetsDraw(chart) {
+        const { ctx } = chart;
+        chart.data.datasets.forEach((ds, di) => {
+          chart.getDatasetMeta(di).data.forEach((bar, i) => {
+            const val = ds.data[i];
+            const label = val>=1000000 ? 'R$'+(val/1000000).toFixed(2)+'M' : 'R$'+(val/1000).toFixed(0)+'K';
+            ctx.save();
+            ctx.font = 'bold 11px Inter';
+            ctx.fillStyle = '#CBD5E0';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(label, bar.x + 8, bar.y);
+            ctx.restore();
+          });
         });
-      });
-    }}]
+      }
+    }]
   });
 
-  // 4 — Status aprovações
-  chartStatusInstance = new Chart(document.getElementById('chartStatus'), {
+  // 4 — Status (doughnut com centro)
+  new Chart(document.getElementById('chartStatus'), {
     type:'doughnut',
-    data:{ labels:['Aprovado','Ok','Pendente','Andamento'], datasets:[{ data: statusValues, backgroundColor:['#68D391','#63B3ED','#FC8181','#F6AD55'], borderWidth:0, hoverOffset:6 }] },
-    options:{...base, cutout:'65%', layout:{ padding:{ top:8, bottom:8 } },
-      centerText:{ value: kpis ? kpis.aprov_pct+'%' : '81%', label:'aprovadas' },
-      onClick(evt, elements) { if (!elements.length) { resetFiltroTabela(); return; } filtrarTabelaPorStatus(chartStatusInstance.data.labels[elements[0].index]); },
-      onHover(evt, elements) { evt.native.target.style.cursor = elements.length ? 'pointer' : 'default'; },
-      plugins:{ legend:{ display:true, position:'right', labels:{ color:'#A0AEC0', font:{size:11,family:'Inter'}, boxWidth:10, padding:12,
-        generateLabels(chart) { const ds = chart.data.datasets[0]; return chart.data.labels.map((lbl,i) => ({ text:`${lbl}  ${ds.data[i]}`, fillStyle:ds.backgroundColor[i], strokeStyle:'transparent', lineWidth:0, index:i, fontColor:'#A0AEC0' })); }
-      }}}
+    data:{
+      labels:['Aprovado','Ok','Pendente','Andamento'],
+      datasets:[{ data:[22,2,1,1], backgroundColor:['#68D391','#63B3ED','#FC8181','#F6AD55'], borderWidth:0, hoverOffset:6 }]
+    },
+    options:{...base, cutout:'65%',
+      layout:{ padding:{ top:8, bottom:8 } },
+      centerText:{ value:'81%', label:'aprovadas' },
+      plugins:{
+        legend:{ display:true, position:'right', labels:{ color:'#A0AEC0', font:{size:11,family:'Inter'}, boxWidth:10, padding:12,
+          generateLabels(chart) {
+            const ds = chart.data.datasets[0];
+            return chart.data.labels.map((lbl,i) => ({
+              text: `${lbl}  ${ds.data[i]}`,
+              fillStyle: ds.backgroundColor[i],
+              strokeStyle: 'transparent', lineWidth:0, index:i,
+              fontColor:'#A0AEC0'
+            }));
+          }
+        }}
+      }
     }
   });
 }
 
-function atualizarGraficos(projetos, kpis) {
-  // Conta tipos de mudança
-  const tiposCount = { Custo: 0, Tempo: 0, Escopo: 0, Prazo: 0 };
-  projetos.forEach(p => {
-    (p.rows || []).forEach(r => {
-      if (tiposCount[r.classificacao] !== undefined) tiposCount[r.classificacao]++;
-    });
-  });
-
-  // Ordena projetos do maior para o menor para o gráfico de volume
-  const projetosOrdenados = [...projetos].sort((a, b) => b.qtd - a.qtd);
-  const projLabels  = projetosOrdenados.map(p => p.nome.replace('Projeto ', ''));
-  const projValues  = projetosOrdenados.map(p => p.qtd);
-
-  // Só projetos com custo > 0 para o gráfico de custo, também ordenado
-  const comCusto = projetos.filter(p => p.custo_total > 0).sort((a,b) => b.custo_total - a.custo_total);
-  const custoLabels = comCusto.map(p => p.nome.replace('Projeto ', ''));
-  const custoValues = comCusto.map(p => p.custo_total);
-
-  initCharts(
-    projLabels,
-    projValues,
-    custoLabels,
-    custoValues,
-    [tiposCount.Custo, tiposCount.Tempo, tiposCount.Escopo, tiposCount.Prazo],
-    [kpis.aprov_n, kpis.total_mudancas - kpis.aprov_n - kpis.pend_n - kpis.andam_n, kpis.pend_n, kpis.andam_n],
-    kpis
-  );
-}
-
-// Inicia carregamento com pequeno delay para garantir DOM pronto
-setTimeout(carregarDados, 100);
-
+// ── INIT ──────────────────────────────────────────────────
+renderDetail('multigateways');
 </script>
-<!-- LOADING -->
-<div id="loadingOverlay" class="loading-overlay">
-  <div class="loading-spinner"></div>
-  <div class="loading-text">Carregando dados do PMO...</div>
-</div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <div>
-        <div class="modal-title" id="modalTitle"></div>
-        <div class="modal-subtitle" id="modalSubtitle"></div>
-      </div>
-      <button class="modal-close" onclick="closeModalBtn()">✕</button>
-    </div>
-    <div class="modal-body" id="modalBody"></div>
-  </div>
-</div>
-
 </body>
 </html>
