@@ -591,7 +591,9 @@ async function carregarDados() {
     // Reconstrói tabela Aba 1
     const tbody = document.querySelector('#mainTable tbody');
     tbody.innerHTML = '';
-    projetosWorker.forEach(p => {
+    console.log('Projetos recebidos:', projetosWorker.length);
+    projetosWorker.forEach((p, idx) => {
+      try {
       // Tipo predominante — pega o mais frequente nas rows
       const tipoFreq = {};
       (p.rows || []).forEach(r => { if(r.classificacao) tipoFreq[r.classificacao] = (tipoFreq[r.classificacao]||0)+1; });
@@ -603,6 +605,7 @@ async function carregarDados() {
       const tr = document.createElement('tr');
       tr.dataset.tipo = tipoLabel;
       tr.onclick = () => goDetail(p.id);
+      tr.setAttribute('onclick', `goDetail('${p.id}')`);
       tr.innerHTML = `
         <td><div class="proj-name">${p.nome.replace('Projeto ','')}</div><div class="proj-gp">${p.gp}</div></td>
         <td><span class="pill p-blue">${p.qtd}</span></td>
@@ -612,6 +615,8 @@ async function carregarDados() {
         <td><span class="pill p-red">Sim — ${p.impede_n} de ${p.qtd}</span></td>
       `;
       tbody.appendChild(tr);
+      console.log('Linha adicionada:', p.nome);
+      } catch(e) { console.error('Erro na linha', idx, e); }
     });
 
     // Reconstrói abas de projetos (Aba 2)
