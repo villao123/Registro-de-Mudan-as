@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR"> 
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -554,6 +554,13 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') closeModalBtn()
 // ── WORKER URL ────────────────────────────────────────────
 const WORKER_URL = 'https://pmo-mudancas.vitormanu-dl05.workers.dev';
 
+// ── VARIÁVEIS GLOBAIS DOS GRÁFICOS ────────────────────────
+var chartsInited = false;
+var chartProjInstance = null;
+var chartTipoInstance = null;
+var chartCustoInstance = null;
+var chartStatusInstance = null;
+
 // ── INIT: busca dados do Worker ───────────────────────────
 async function carregarDados() {
   const loading = document.getElementById('loadingOverlay');
@@ -694,6 +701,118 @@ function mostrarErro(msg) {
     `;
     loading.style.display = 'flex';
   }
+}
+
+function initCharts(
+  projLabels, projValues, custoLabels, custoValues,
+  tipoValues, statusValues, kpis
+) {
+  if (chartsInited) {
+    if (chartProjInstance)   { chartProjInstance.data.labels = projLabels; chartProjInstance.data.datasets[0].data = projValues; chartProjInstance.update(); }
+    if (chartTipoInstance)   { chartTipoInstance.data.datasets[0].data = tipoValues; chartTipoInstance.update(); }
+    if (chartCustoInstance)  { chartCustoInstance.data.labels = custoLabels; chartCustoInstance.data.datasets[0].data = custoValues; chartCustoInstance.update(); }
+    if (chartStatusInstance) { chartStatusInstance.data.datasets[0].data = statusValues; chartStatusInstance.update(); }
+    return;
+  }
+  chartsInited = true;
+
+  const gc = (color) => ({ color, font: { size: 10, family: 'Inter' } });
+  const gridC = 'rgba(255,255,255,0.05)';
+  const base = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } };
+
+  const centerTextPlugin = {
+    id:'centerText',
+    afterDraw(chart) {
+      if (!chart.config.options.centerText) return;
+      const { ctx, chartArea:{ width, height, left, top } } = chart;
+      const cx = left + width/2, cy = top + height/2;
+      ctx.save();
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = 'bold 22px Inter'; ctx.fillStyle = '#E2E8F0';
+      ctx.fillText(chart.config.options.centerText.value, cx, cy - 10);
+      ctx.font = '10px Inter'; ctx.fillStyle = '#4A6378';
+      ctx.fillText(chart.config.options.centerText.label, cx, cy + 12);
+      ctx.restore();
+    }
+  };
+  Chart.register(centerTextPlugin);
+
+  // 1 — Volume por projeto
+  chartProjInstance = new Chart(document.getElementById('chartProj'), {
+    type:'bar',
+    data:{ labels: projLabels, datasets:[{ data: projValues, backgroundColor: projValues.map((v,i) => i<2?'#63B3ED':'#4A6378'), borderRadius:5 }] },
+    options:{...base, layout:{ padding:{ top:20 } },
+      scales:{
+        x:{ grid:{display:false}, ticks:{ ...gc('#4A6378'), maxRotation:0 } },
+        y:{ grid:{color:gridC}, ticks:gc('#4A6378'), beginAtZero:true }
+      },
+      onClick(evt, elements) { if (!elements.length) { resetFiltroTabela(); return; } filtrarTabelaPorProjeto(chartProjInstance.data.labels[elements[0].index]); },
+      onHover(evt, elements) { evt.native.target.style.cursor = elements.length ? 'pointer' : 'default'; }
+    },
+    plugins:[{ id:'barLabels', afterDatasetsDraw(chart) {
+      const { ctx } = chart;
+      chart.data.datasets.forEach((ds, di) => {
+        chart.getDatasetMeta(di).data.forEach((bar, i) => {
+          ctx.save(); ctx.font='bold 12px Inter'; ctx.fillStyle='#CBD5E0'; ctx.textAlign='center'; ctx.textBaseline='bottom';
+          ctx.fillText(ds.data[i], bar.x, bar.y - 4); ctx.restore();
+        });
+      });
+    }}]
+  });
+
+  // 2 — Tipo de mudança
+  chartTipoInstance = new Chart(document.getElementById('chartTipo'), {
+    type:'doughnut',
+    data:{ labels:['Custo','Tempo','Escopo','Prazo'], datasets:[{ data: tipoValues, backgroundColor:['#F6AD55','#63B3ED','#B794F4','#FC8181'], borderWidth:0, hoverOffset:6 }] },
+    options:{...base, cutout:'65%', layout:{ padding:{ top:8, bottom:8 } },
+      centerText:{ value: String(tipoValues.reduce((a,b)=>a+b,0)), label:'mudanças' },
+      onClick(evt, elements) { if (!elements.length) { resetFiltroTabela(); return; } filtrarTabelaPorTipo(chartTipoInstance.data.labels[elements[0].index]); },
+      onHover(evt, elements) { evt.native.target.style.cursor = elements.length ? 'pointer' : 'default'; },
+      plugins:{ legend:{ display:true, position:'right', labels:{ color:'#A0AEC0', font:{size:11,family:'Inter'}, boxWidth:10, padding:12,
+        generateLabels(chart) { const ds = chart.data.datasets[0]; return chart.data.labels.map((lbl,i) => ({ text:`${lbl}  ${ds.data[i]}`, fillStyle:ds.backgroundColor[i], strokeStyle:'transparent', lineWidth:0, index:i, fontColor:'#A0AEC0' })); }
+      }}}
+    }
+  });
+
+  // 3 — Custo por projeto
+  chartCustoInstance = new Chart(document.getElementById('chartCusto'), {
+    type:'bar',
+    data:{ labels: custoLabels, datasets:[{ data: custoValues, backgroundColor:['#F6AD55','#63B3ED','#68D391','#B794F4'], borderRadius:5 }] },
+    options:{...base, indexAxis:'y',
+      scales:{
+        x:{ grid:{color:gridC}, ticks:{ ...gc('#4A6378'), callback: v => 'R$'+(v>=1000000?(v/1000000).toFixed(1)+'M':(v/1000).toFixed(0)+'K') } },
+        y:{ grid:{display:false}, ticks:gc('#A0AEC0') }
+      },
+      onClick(evt, elements) { if (!elements.length) { resetFiltroTabela(); return; } filtrarTabelaPorProjeto(chartCustoInstance.data.labels[elements[0].index]); },
+      onHover(evt, elements) { evt.native.target.style.cursor = elements.length ? 'pointer' : 'default'; },
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: c=>' R$ '+c.parsed.x.toLocaleString('pt-BR') } } }
+    },
+    plugins:[{ id:'hbarLabels', afterDatasetsDraw(chart) {
+      const { ctx } = chart;
+      chart.data.datasets.forEach((ds, di) => {
+        chart.getDatasetMeta(di).data.forEach((bar, i) => {
+          const val = ds.data[i];
+          const label = val>=1000000?'R$'+(val/1000000).toFixed(2)+'M':'R$'+(val/1000).toFixed(0)+'K';
+          ctx.save(); ctx.font='bold 11px Inter'; ctx.fillStyle='#CBD5E0'; ctx.textAlign='left'; ctx.textBaseline='middle';
+          ctx.fillText(label, bar.x + 8, bar.y); ctx.restore();
+        });
+      });
+    }}]
+  });
+
+  // 4 — Status aprovações
+  chartStatusInstance = new Chart(document.getElementById('chartStatus'), {
+    type:'doughnut',
+    data:{ labels:['Aprovado','Ok','Pendente','Andamento'], datasets:[{ data: statusValues, backgroundColor:['#68D391','#63B3ED','#FC8181','#F6AD55'], borderWidth:0, hoverOffset:6 }] },
+    options:{...base, cutout:'65%', layout:{ padding:{ top:8, bottom:8 } },
+      centerText:{ value: kpis ? kpis.aprov_pct+'%' : '81%', label:'aprovadas' },
+      onClick(evt, elements) { if (!elements.length) { resetFiltroTabela(); return; } filtrarTabelaPorStatus(chartStatusInstance.data.labels[elements[0].index]); },
+      onHover(evt, elements) { evt.native.target.style.cursor = elements.length ? 'pointer' : 'default'; },
+      plugins:{ legend:{ display:true, position:'right', labels:{ color:'#A0AEC0', font:{size:11,family:'Inter'}, boxWidth:10, padding:12,
+        generateLabels(chart) { const ds = chart.data.datasets[0]; return chart.data.labels.map((lbl,i) => ({ text:`${lbl}  ${ds.data[i]}`, fillStyle:ds.backgroundColor[i], strokeStyle:'transparent', lineWidth:0, index:i, fontColor:'#A0AEC0' })); }
+      }}}
+    }
+  });
 }
 
 function atualizarGraficos(projetos, kpis) {
