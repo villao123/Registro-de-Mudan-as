@@ -603,6 +603,14 @@ function initCharts(
         legend:{display:false},
         tooltip:{ callbacks:{ label: c => ` ${c.parsed.y} mudanças` } },
         datalabels: false
+      },
+      onClick(evt, elements) {
+        if (!elements.length) { resetFiltroTabela(); return; }
+        const label = chartProjInstance.data.labels[elements[0].index];
+        filtrarTabelaPorProjeto(label);
+      },
+      onHover(evt, elements) {
+        evt.native.target.style.cursor = elements.length ? 'pointer' : 'default';
       }
     },
     plugins:[{
@@ -635,6 +643,14 @@ function initCharts(
     options:{...base, cutout:'65%',
       layout:{ padding:{ top:8, bottom:8 } },
       centerText:{ value:'27', label:'mudanças' },
+      onClick(evt, elements) {
+        if (!elements.length) { resetFiltroTabela(); return; }
+        const label = chartTipoInstance.data.labels[elements[0].index];
+        filtrarTabelaPorTipo(label);
+      },
+      onHover(evt, elements) {
+        evt.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+      },
       plugins:{
         legend:{ display:true, position:'right', labels:{ color:'#A0AEC0', font:{size:11,family:'Inter'}, boxWidth:10, padding:12,
           generateLabels(chart) {
@@ -662,6 +678,14 @@ function initCharts(
       scales:{
         x:{ grid:{color:gridC}, ticks:{ ...gc('#4A6378'), callback: v => 'R$'+(v>=1000000?(v/1000000).toFixed(1)+'M':(v/1000).toFixed(0)+'K') } },
         y:{ grid:{display:false}, ticks:gc('#A0AEC0') }
+      },
+      onClick(evt, elements) {
+        if (!elements.length) { resetFiltroTabela(); return; }
+        const label = chartCustoInstance.data.labels[elements[0].index];
+        filtrarTabelaPorProjeto(label);
+      },
+      onHover(evt, elements) {
+        evt.native.target.style.cursor = elements.length ? 'pointer' : 'default';
       },
       plugins:{
         legend:{display:false},
@@ -699,6 +723,14 @@ function initCharts(
     options:{...base, cutout:'65%',
       layout:{ padding:{ top:8, bottom:8 } },
       centerText:{ value:'81%', label:'aprovadas' },
+      onClick(evt, elements) {
+        if (!elements.length) { resetFiltroTabela(); return; }
+        const label = chartStatusInstance.data.labels[elements[0].index];
+        filtrarTabelaPorStatus(label);
+      },
+      onHover(evt, elements) {
+        evt.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+      },
       plugins:{
         legend:{ display:true, position:'right', labels:{ color:'#A0AEC0', font:{size:11,family:'Inter'}, boxWidth:10, padding:12,
           generateLabels(chart) {
@@ -718,6 +750,88 @@ function initCharts(
 
 // ── DADOS COMPLETOS DO EXCEL ──────────────────────────────
 const FULL_DATA = {"multigateways":[{"num":1,"desc":"Desenvolvimento da leitura e importação do arquivo CNAB750 no conciliador DB PAY visando conciliar recebíveis de transações de PIX junto aos bancos.","just":"Apresentação de novo layout de conciliação de PIX pelos bancos CNAB750, não previsto no escopo inicial do projeto.","solicitante":"Vinicius Rezende Dias Teodoro","data_solic":"28/11/2025","classificacao":"Custo","custo":"20.100","prazo":"—","responsavel":"Vinicius Rezende Dias Teodoro","aprovador":"Lucas Silva Santana","data_aprov":"03/02/2025","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":2,"desc":"PCI refere-se aos requisitos de segurança para proteção de dados de pagamento, garantindo que informações sensíveis (como dados de cartão) sejam tratadas de forma segura, evitando fraudes e vazamentos.","just":"Atender ao PCI é essencial para garantir conformidade regulatória, mitigar riscos de segurança, viabilizar a operação com parceiros financeiros e assegurar a entrada em produção com governança e confiabilidade.","solicitante":"Vinicius Rezende Dias Teodoro","data_solic":"24/07/2025","classificacao":"Custo","custo":"17.100","prazo":"—","responsavel":"Vinicius Rezende Dias Teodoro","aprovador":"Lucas Silva Santana","data_aprov":"22/01/2025","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":3,"desc":"A equipe da DB desenvolveu as APIs de integração com base integralmente na documentação técnica disponibilizada pela adquirente ao longo do projeto, a qual, em todas as versões recebidas, direcionava a integração para os endpoints da plataforma MaxiPago. Somente após novo alinhamento técnico recente com a adquirente Rede foi disponibilizada uma nova documentação, até então não compartilhada, indicando que os novos clientes e integrações devem utilizar exclusivamente a API proprietária da Rede.","just":"A adquirente Rede está em processo oficial de desacoplamento da plataforma MaxiPago, com previsão de conclusão até julho de 2026, direcionando todos os novos clientes, integrações e evoluções exclusivamente para sua API proprietária.","solicitante":"Vinicius Rezende Dias Teodoro","data_solic":"16/01/2026","classificacao":"Custo","custo":"15.000","prazo":"—","responsavel":"Vinicius Rezende Dias Teodoro","aprovador":"Anna Navas","data_aprov":"07/02/2026","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":4,"desc":"Solicitação de aprovação de custo OPEX recorrente para os ambientes Produção (PRD), Homologação (HOM) e Desenvolvimento (DEV) referentes ao uso de MongoDB e Kafka, contemplando o tráfego estimado mensal necessário para garantir conectividade, desempenho e disponibilidade adequados à operação dos sistemas integrados.","just":"Garantir a capacidade adequada de tráfego e comunicação entre os ambientes MongoDB e Kafka. Atender às boas práticas de arquitetura, separando corretamente os ambientes DEV, HOM e PRD.","solicitante":"Vinicius Rezende Dias Teodoro","data_solic":"19/01/2026","classificacao":"Escopo","custo":"—","prazo":"—","responsavel":"Vinicius Rezende Dias Teodoro","aprovador":"Lucas Silva Santana","data_aprov":"—","status":"Aprovado","impede":"Não","prioridade":"2-Média"},{"num":5,"desc":"Para atendimento aos requisitos PCI DSS 1.4.1, 1.4.2, 1.4.3 e 6.4.2, é necessária a implantação de um Web Application Firewall (WAF) da Akamai no escopo DBPay, visando a proteção das aplicações expostas contra ataques e acessos não autorizados.","just":"O projeto Multigateways/DBPay é um sistema de pagamento e, portanto, deve atender integralmente aos requisitos de conformidade PCI DSS. Durante o detalhamento dos controles de segurança, foi identificada a necessidade de implantação do WAF da Akamai, requisito básico de PCI para ambientes expostos.","solicitante":"Celso Quinalha Junior","data_solic":"30/01/2026","classificacao":"Custo","custo":"37.800","prazo":"—","responsavel":"Celso Quinalha Junior","aprovador":"Lucas Silva Santana","data_aprov":"—","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":6,"desc":"Por direcionamento do Head, foi solicitada a alteração da tecnologia de mensageria utilizada no projeto MultiGateway. O fluxo anteriormente implementado com Google Pub/Sub deverá ser substituído por Kafka, adequando a solução ao padrão tecnológico definido para a plataforma.","just":"A substituição do Google Pub/Sub pelo Kafka atende a uma decisão executiva de alinhamento arquitetural, visando maior padronização, governança, escalabilidade e aderência à estratégia corporativa de integração e mensageria.","solicitante":"Lucas Silva Santana","data_solic":"02/10/2025","classificacao":"Escopo","custo":"—","prazo":"—","responsavel":"Vinicius Rezende Dias Teodoro","aprovador":"Lucas Silva Santana","data_aprov":"29/01/2025","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":7,"desc":"Evolução do Portal Toxicológico já existente para suportar a integração com o novo gateway de pagamento, contemplando adequações técnicas, funcionais e de segurança necessárias para viabilizar os novos fluxos de cobrança, pagamento e conciliação financeira.","just":"A adaptação do Portal Toxicológico é necessária para garantir a continuidade operacional e a aderência à nova estratégia de pagamentos, substituindo ou complementando o modelo atual de cobrança.","solicitante":"Denise Moretto","data_solic":"18/12/2025","classificacao":"Escopo","custo":"—","prazo":"Go Live 27/04","responsavel":"Denise Moretto","aprovador":"Lucas Silva Santana","data_aprov":"07/02/2026","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":8,"desc":"Durante os testes da integração webhook da adquirente Getnet, desenvolvida conforme a documentação originalmente fornecida, foi identificado que o modelo disponibilizado encontra-se depreciado para operação no Brasil. Após acionamento da adquirente, foi formalmente orientada a adoção de uma nova abordagem de integração.","just":"O webhook é um componente crítico do MultiGateway, responsável pela atualização dos status das transações diretamente a partir da adquirente. A não implementação da nova integração inviabiliza a sincronização correta dos pagamentos.","solicitante":"Vinicius Rezende Dias Teodoro","data_solic":"10/02/2026","classificacao":"Custo","custo":"12.000","prazo":"—","responsavel":"Vinicius Rezende Dias Teodoro","aprovador":"Lucas Silva Santana","data_aprov":"—","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":9,"desc":"API PIX depreciada","just":"Alterações de escopo necessárias para atender necessidades das instituições financeiras e equipe toxicológico.","solicitante":"Vinicius Rezende Dias Teodoro","data_solic":"23/03/2026","classificacao":"Custo","custo":"15.000","prazo":"—","responsavel":"Vinicius Rezende Dias Teodoro","aprovador":"Lucas Silva Santana","data_aprov":"—","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":10,"desc":"Ajustes técnicos e de segurança na aplicação, conforme apontamentos do relatório de Pentest/PCI emitido pela consultoria especializada, visando correção de vulnerabilidades identificadas e adequação aos requisitos de segurança.","just":"—","solicitante":"Vinicius Rezende Dias Teodoro","data_solic":"30/03/2026","classificacao":"Custo","custo":"21.080","prazo":"—","responsavel":"Vinicius Rezende Dias Teodoro","aprovador":"Lucas Silva Santana","data_aprov":"—","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":11,"desc":"Reprogramação do Go Live do projeto Multigateway / DBCash de 06/04/2026 para o período de 25/05 a 01/06/2026.","just":"Necessidade de conclusão das integrações bancárias, homologações end-to-end, ajustes estabilização técnica da solução.","solicitante":"Vinicius Rezende Dias Teodoro","data_solic":"19/05/2026","classificacao":"Prazo","custo":"—","prazo":"50 dias","responsavel":"Vinicius Rezende Dias Teodoro","aprovador":"Lucas Silva Santana","data_aprov":"—","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":12,"desc":"Reprogramação do Go Live do Portal Toxicológico de 27/04/2026 para o período de 25/05 a 01/06/2026.","just":"Necessidade de conclusão dos testes integrados, estabilização das integrações com G5/DBCash e tratativas técnicas junto aos bancos.","solicitante":"Denise Moretto","data_solic":"19/05/2026","classificacao":"Prazo","custo":"—","prazo":"30 dias","responsavel":"Denise Moretto","aprovador":"Lucas Silva Santana","data_aprov":"—","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"}],"upgo":[{"num":1,"desc":"Durante o detalhamento, identificou-se a necessidade de incluir custos complementares não previstos inicialmente, como os da área de TI e itens adicionais do almoxarifado.","just":"Inicialmente foi aprovado o custo relativo à obra/Infra pelo Aureliano, porém para dar continuidade ao projeto se faz necessário incluir os custos relacionados a TI e a estrutura do Almox que não foram contemplados inicialmente.","solicitante":"Alexandre Martins Frota e Luciano Antônio Da Silva","data_solic":"11/11/2025","classificacao":"Custo","custo":"866.712","prazo":"—","responsavel":"Alexandre Martins Frota e Luciano Antônio Da Silva","aprovador":"Tobias","data_aprov":"14/11/2025","status":"Aprovado","impede":"Sim","prioridade":"0-Altíssima"},{"num":2,"desc":"Durante o processo de aprovação no OBC, identificou-se a necessidade de incrementar o custo não previsto inicialmente, da área de Execução Civil e Câmara Fria para o Almoxarifado.","just":"Inicialmente foi aprovado o custo relativo ao Almoxarifado e Área produtiva pelo Aureliano, porém para dar continuidade ao projeto se faz necessário incrementar os custos relacionados à Câmara Fria e Execução Civil.","solicitante":"Osmar Alves De Morais","data_solic":"24/11/2025","classificacao":"Custo","custo":"182.889","prazo":"—","responsavel":"Osmar Alves De Morais","aprovador":"Aureliano","data_aprov":"24/11/2025","status":"Aprovado","impede":"Sim","prioridade":"0-Altíssima"},{"num":3,"desc":"Durante o processo de aprovação no OBC, identificou-se a necessidade de incrementar o custo não previsto inicialmente, do item Mezanino Acima da Câmara Fria para o Almoxarifado.","just":"Inicialmente foi aprovado o custo relativo ao Almoxarifado e Área produtiva, porém para dar continuidade ao projeto se faz necessário incrementar os custos relacionados ao Mezanino acima da câmara fria.","solicitante":"Osmar Alves De Morais","data_solic":"23/12/2025","classificacao":"Custo","custo":"133.049","prazo":"—","responsavel":"Osmar Alves De Morais","aprovador":"Aureliano","data_aprov":"—","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":4,"desc":"Durante o detalhamento, identificou-se a necessidade de incluir custos complementares não previstos inicialmente, como a movimentação dos equipamentos na área produtiva.","just":"Inicialmente foi aprovado o custo relativo ao Almoxarifado e Área produtiva, porém para dar continuidade ao projeto se faz necessário incrementar os custos relacionados à movimentação de equipamentos.","solicitante":"Luciano Fellini de Abreu","data_solic":"02/12/2025","classificacao":"Custo","custo":"107.861","prazo":"—","responsavel":"Luciano Fellini de Abreu","aprovador":"Aureliano","data_aprov":"15/01/2026","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":5,"desc":"Durante o detalhamento, identificou-se a necessidade de incluir custos complementares não previstos inicialmente, como o acréscimo ao custo do Isopainel Fechamento.","just":"Inicialmente foi aprovado o custo relativo à obra/Infra, porém para dar continuidade ao projeto se faz necessário incluir os custos relacionados ao novo almoxarifado que não foram contemplados inicialmente.","solicitante":"Osmar Alves De Morais","data_solic":"19/01/2026","classificacao":"Custo","custo":"23.860","prazo":"—","responsavel":"Osmar Alves De Morais","aprovador":"Aureliano","data_aprov":"29/01/2026","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":6,"desc":"Acréscimo ao custo da execução Mezanino e execução civil área técnica.","just":"Inicialmente foi aprovado o custo relativo à obra/infra pelo Aureliano, porém para dar continuidade ao projeto se faz necessário incluir custos relacionados à ampliação da área técnica que não foram contemplados inicialmente.","solicitante":"Osmar Alves De Morais","data_solic":"17/04/2026","classificacao":"Custo","custo":"524.000","prazo":"—","responsavel":"Osmar Alves De Morais","aprovador":"Aureliano","data_aprov":"07/05/2026","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":7,"desc":"Inclusão de custo para cobrir o piso epoxi e parede de drywall.","just":"Inicialmente foi aprovado o custo relativo à obra/infra, porém para dar continuidade ao projeto se faz necessário incluir custos relacionados à ampliação da área técnica que não foram contemplados inicialmente.","solicitante":"Osmar Alves De Morais","data_solic":"17/04/2026","classificacao":"Custo","custo":"90.000","prazo":"—","responsavel":"Osmar Alves De Morais","aprovador":"Aureliano","data_aprov":"07/05/2026","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":8,"desc":"Ajuste de custo para a Elétrica.","just":"Inicialmente foi aprovado o custo relativo à obra/infra, porém para dar continuidade ao projeto se faz necessário incluir custos relacionados à ampliação da área técnica que não foram contemplados inicialmente.","solicitante":"Osmar Alves De Morais","data_solic":"17/04/2026","classificacao":"Custo","custo":"180.000","prazo":"—","responsavel":"Osmar Alves De Morais","aprovador":"Aureliano","data_aprov":"07/05/2026","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"},{"num":9,"desc":"Alteração de prazo da Fase 3 – área técnica, com antecipação da data de finalização de 30/09 para 31/07, visando acelerar a disponibilização da estrutura para operação.","just":"Replanejamento das atividades e priorização das frentes de obra, permitindo ganho de prazo e antecipação da operação, sem comprometimento da qualidade e escopo.","solicitante":"Aureliano","data_solic":"30/03/2026","classificacao":"Tempo","custo":"—","prazo":"61 dias","responsavel":"Osmar Alves De Morais","aprovador":"Aureliano","data_aprov":"—","status":"Em andamento","impede":"Sim","prioridade":"0-Altíssima"},{"num":10,"desc":"Adequação do escopo de T.I referente ao cabeamento estruturado (rede e fibra) da ampliação da UP Goiânia, incluindo readequações na área técnica (Setor A) para suportar a expansão operacional.","just":"A adequação é necessária para garantir capacidade, estabilidade e desempenho da infraestrutura de rede frente à ampliação da área técnica da unidade. Durante avaliação técnica foram identificadas limitações na estrutura existente, exigindo readequações para suportar o novo volume operacional.","solicitante":"Lucas Silva Santana","data_solic":"06/05/2026","classificacao":"Custo","custo":"181.575","prazo":"—","responsavel":"Rafael Veloso","aprovador":"Lucas Santana","data_aprov":"06/05/2026","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"}],"sexagem":[{"num":1,"desc":"Inclusão de orçamento CAPEX + OPEX referente ao pacote de aquisições e instalação INFRAESTRUTURA TI.","just":"Os custos em questão foram fechados e enviados para o PMO em 30/10/2025.","solicitante":"Adriano Braga Claro dos Santos Junior","data_solic":"31/10/2025","classificacao":"Custo","custo":"205.317","prazo":"—","responsavel":"Alexandre Martins Frota","aprovador":"Gustavo Aguiar Campana","data_aprov":"—","status":"Pendente","impede":"Sim","prioridade":"1-Alta"},{"num":2,"desc":"Necessário prorrogação do Go-Live da unidade MOL, passando de 05/01/2026 para 19/01/2026.","just":"Mudança solicitada devido à dificuldade de contratação das duas vagas de Analista Técnico necessárias para início da operação.","solicitante":"Andrea Alfieri Gomes Da Silva","data_solic":"08/12/2025","classificacao":"Prazo","custo":"—","prazo":"14 dias","responsavel":"Cristina Pavlick Muniz","aprovador":"Gustavo Aguiar Campana","data_aprov":"09/12/2025","status":"Aprovado","impede":"Sim","prioridade":"1-Alta"}],"jornada":[{"num":1,"desc":"Implantação de encapsulamento de lotes, para o fluxo de transbordo e alteração de telas de triagem para recebimento de caixas ao invés de lotes.","just":"Equipe comentou que o motorista não teria tempo para fazer a coleta de todos os lotes no transbordo, sem o encapsulamento via sistema, item que não estava previsto anteriormente.","solicitante":"Édison","data_solic":"20/10/2025","classificacao":"Tempo","custo":"—","prazo":"60 dias","responsavel":"Édison","aprovador":"Tobias","data_aprov":"—","status":"Em andamento","impede":"Sim","prioridade":"1-Alta"}],"bid":[{"num":1,"desc":"Disponibilização da obra - Laboratórios.","just":"Devido a troca de CNPJ foi necessário refazer o processo de ligação de energia junto a CPFL.","solicitante":"—","data_solic":"—","classificacao":"Tempo","custo":"—","prazo":"45 dias","responsavel":"—","aprovador":"Tobias","data_aprov":"05/11/2021","status":"Ok","impede":"Sim","prioridade":"0-Altíssima"}],"feira":[{"num":1,"desc":"Disponibilização da obra - Laboratórios.","just":"Devido a troca de CNPJ foi necessário refazer o processo de ligação de energia junto a CPFL.","solicitante":"—","data_solic":"—","classificacao":"Tempo","custo":"—","prazo":"45 dias","responsavel":"—","aprovador":"Tobias","data_aprov":"05/11/2021","status":"Ok","impede":"Sim","prioridade":"0-Altíssima"}]};
+
+// ── FILTROS POR CLIQUE NO GRÁFICO ────────────────────────
+let filtroAtivo = null;
+
+function mostrarFiltroAtivo(label, tipo) {
+  // Remove badge anterior se existir
+  const old = document.getElementById('filtroAtivoBadge');
+  if (old) old.remove();
+
+  if (!label) return;
+
+  const header = document.querySelector('.table-header');
+  const badge = document.createElement('div');
+  badge.id = 'filtroAtivoBadge';
+  badge.style.cssText = 'display:flex;align-items:center;gap:8px;margin-left:10px';
+  badge.innerHTML = `
+    <span style="font-size:10px;color:#4A6378">Filtro:</span>
+    <span style="font-size:11px;font-weight:600;background:#1E2D3D;color:#63B3ED;padding:3px 10px;border-radius:20px;border:1px solid #63B3ED">
+      ${label}
+    </span>
+    <span onclick="resetFiltroTabela()" style="font-size:11px;color:#3D5166;cursor:pointer;padding:2px 6px;border-radius:4px;hover:color:#E2E8F0" title="Limpar filtro">✕</span>
+  `;
+  header.appendChild(badge);
+}
+
+function filtrarTabelaPorProjeto(nomeLabel) {
+  // Limpa filtros dos botões
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn').classList.add('active'); // "Todos" ativo visualmente
+
+  filtroAtivo = { tipo: 'projeto', valor: nomeLabel };
+  mostrarFiltroAtivo(nomeLabel, 'projeto');
+
+  document.querySelectorAll('#mainTable tbody tr').forEach(tr => {
+    const nome = tr.querySelector('.proj-name');
+    if (!nome) return;
+    const match = nome.textContent.toLowerCase().includes(nomeLabel.toLowerCase().replace('projeto ',''));
+    tr.classList.toggle('hidden', !match);
+  });
+}
+
+function filtrarTabelaPorTipo(tipo) {
+  // Ativa botão correspondente
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim().toLowerCase() === tipo.toLowerCase());
+  });
+
+  filtroAtivo = { tipo: 'tipo', valor: tipo };
+  mostrarFiltroAtivo(tipo, 'tipo');
+
+  document.querySelectorAll('#mainTable tbody tr').forEach(tr => {
+    const match = tr.dataset.tipo && tr.dataset.tipo.toLowerCase() === tipo.toLowerCase();
+    tr.classList.toggle('hidden', !match);
+  });
+}
+
+function filtrarTabelaPorStatus(status) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn').classList.add('active');
+
+  filtroAtivo = { tipo: 'status', valor: status };
+  mostrarFiltroAtivo(status, 'status');
+
+  document.querySelectorAll('#mainTable tbody tr').forEach(tr => {
+    const statusEl = tr.querySelector('.pill.p-green, .pill.p-red, .pill.p-amber, .pill.p-gray');
+    if (!statusEl) return;
+    const match = statusEl.textContent.trim().toLowerCase().includes(status.toLowerCase());
+    tr.classList.toggle('hidden', !match);
+  });
+}
+
+function resetFiltroTabela() {
+  filtroAtivo = null;
+  mostrarFiltroAtivo(null);
+  document.querySelectorAll('#mainTable tbody tr').forEach(tr => tr.classList.remove('hidden'));
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn').classList.add('active');
+  // Reseta highlight dos gráficos
+  [chartProjInstance, chartTipoInstance, chartCustoInstance, chartStatusInstance].forEach(c => {
+    if (c) { c.data.datasets[0].backgroundColor = c.data.datasets[0]._origColors || c.data.datasets[0].backgroundColor; c.update(); }
+  });
+}
 
 // ── MODAL FUNCTIONS ───────────────────────────────────────
 function openModal(projId, rowNum) {
