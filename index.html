@@ -800,14 +800,11 @@ function filtrarTabelaPorTipo(tipo) {
 
   let totalTipo = 0;
   document.querySelectorAll('#mainTable tbody tr').forEach(tr => {
-    const onclick = tr.getAttribute('onclick') || '';
-    const projId = onclick.match(/'([^']+)'/)?.[1];
+    const projId = tr.dataset.projid || (tr.getAttribute('onclick') || '').match(/'([^']+)'/)?.[1];
     if (!projId || !PROJECTS[projId]) return;
 
-    // Conta mudanças desse tipo nesse projeto
     const count = (PROJECTS[projId].rows || []).filter(r => {
       const classificacao = (r[2] || '').trim();
-      // Rows sem classificação que têm prazo em dias são do tipo Prazo
       const tipoEfetivo = classificacao || (r[4] && r[4] !== '—' ? 'Prazo' : '—');
       return tipoEfetivo.toLowerCase() === tipo.toLowerCase();
     }).length;
@@ -846,8 +843,7 @@ function resetFiltroTabela() {
   document.querySelectorAll('#mainTable tbody tr').forEach(tr => {
     tr.classList.remove('hidden');
     // Restaura QTD original
-    const onclick = tr.getAttribute('onclick') || '';
-    const projId = onclick.match(/'([^']+)'/)?.[1];
+    const projId = tr.dataset.projid || (tr.getAttribute('onclick') || '').match(/'([^']+)'/)?.[1];
     if (projId && PROJECTS[projId]) {
       const qtdEl = tr.querySelector('.pill.p-blue');
       if (qtdEl) qtdEl.textContent = PROJECTS[projId].stats.qtd;
@@ -982,6 +978,7 @@ async function carregarDados() {
       const custoFmt   = p.custo_total > 0 ? 'R$ ' + p.custo_total.toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:0}) : '—';
       const tr = document.createElement('tr');
       tr.dataset.tipo = tipoLabel;
+      tr.dataset.projid = p.id;
       tr.onclick = () => goDetail(p.id);
       tr.innerHTML = `
         <td><div class="proj-name">${p.nome.replace('Projeto ','')}</div><div class="proj-gp">${p.gp}</div></td>
