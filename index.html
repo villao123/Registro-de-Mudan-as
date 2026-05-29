@@ -805,9 +805,12 @@ function filtrarTabelaPorTipo(tipo) {
     if (!projId || !PROJECTS[projId]) return;
 
     // Conta mudanças desse tipo nesse projeto
-    const count = (PROJECTS[projId].rows || []).filter(r =>
-      r[2] && r[2].toLowerCase() === tipo.toLowerCase()
-    ).length;
+    const count = (PROJECTS[projId].rows || []).filter(r => {
+      const classificacao = (r[2] || '').trim();
+      // Rows sem classificação que têm prazo em dias são do tipo Prazo
+      const tipoEfetivo = classificacao || (r[4] && r[4] !== '—' ? 'Prazo' : '—');
+      return tipoEfetivo.toLowerCase() === tipo.toLowerCase();
+    }).length;
 
     if (count > 0) {
       tr.classList.remove('hidden');
