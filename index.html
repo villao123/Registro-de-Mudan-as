@@ -371,8 +371,10 @@ tbody td{padding:16px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,
 <script>
 // ── DATA ─────────────────────────────────────────────────
 const PROJECTS = {};
-
 const FULL_DATA = {};
+
+const STATUS_CLASS = { "Aprovado":"p-green","aprovado":"p-green","Ok":"p-green","ok":"p-green","Pendente":"p-red","pendente":"p-red","Em andamento":"p-amber","Em Andamento":"p-amber","Andamento":"p-amber","—":"p-gray" };
+const TIPO_CLASS   = { "Custo":"p-amber","Tempo":"p-blue","Escopo":"p-purple","Prazo":"p-gray" };
 
 // ── FILTROS POR CLIQUE NO GRÁFICO ────────────────────────
 let filtroAtivo = null;
