@@ -528,7 +528,7 @@ function renderDetail(projId) {
       <td style="color:#3D5166;padding-left:${isPend||isAndamento?'10px':'0'}">${r[0]}</td>
       <td><div class="desc-text">${r[1]}</div></td>
       <td><span class="pill ${TIPO_CLASS[r[2]]||'p-gray'}">${r[2]}</span></td>
-      <td class="mono">${r[3] !== '—' ? 'R$ '+r[3] : '—'}</td>
+      <td class="mono">${r[3] !== '—' ? 'R$ ' + parseFloat(r[3]).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}) : '—'}</td>
       <td style="color:${r[4]!=='—'?'#F6AD55':'#2D4459'}">${r[4]}</td>
       <td>${r[5]}</td>
       <td style="color:#4A6378">${r[6]}</td>
