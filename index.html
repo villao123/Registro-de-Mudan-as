@@ -303,28 +303,24 @@ tbody td{padding:10px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,
             <div class="side-card" style="flex:unset;display:flex;flex-direction:column">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;flex-shrink:0">
                 <span class="section-title">Volume por projeto</span>
-                <span style="font-size:18px;font-weight:700;color:#63B3ED">27</span>
               </div>
               <div style="flex:1;position:relative;min-height:0"><canvas id="chartProj"></canvas></div>
             </div>
             <div class="side-card" style="flex:unset;display:flex;flex-direction:column">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;flex-shrink:0">
                 <span class="section-title">Tipo de mudança</span>
-                <span style="font-size:18px;font-weight:700;color:#F6AD55">63% custo</span>
               </div>
               <div style="flex:1;position:relative;min-height:0"><canvas id="chartTipo"></canvas></div>
             </div>
             <div class="side-card" style="flex:unset;display:flex;flex-direction:column">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;flex-shrink:0">
                 <span class="section-title">Custo por projeto</span>
-                <span style="font-size:18px;font-weight:700;color:#F6AD55">R$2,6M</span>
               </div>
               <div style="flex:1;position:relative;min-height:0"><canvas id="chartCusto"></canvas></div>
             </div>
             <div class="side-card" style="flex:unset;display:flex;flex-direction:column">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;flex-shrink:0">
                 <span class="section-title">Status aprovações</span>
-                <span style="font-size:18px;font-weight:700;color:#68D391">81%</span>
               </div>
               <div style="flex:1;position:relative;min-height:0"><canvas id="chartStatus"></canvas></div>
             </div>
@@ -941,23 +937,29 @@ function atualizarGraficos(projetos, kpis) {
     });
   });
 
+  // Ordena projetos do maior para o menor para o gráfico de volume
+  const projetosOrdenados = [...projetos].sort((a, b) => b.qtd - a.qtd);
+  const projLabels  = projetosOrdenados.map(p => p.nome.replace('Projeto ', ''));
+  const projValues  = projetosOrdenados.map(p => p.qtd);
+
+  // Só projetos com custo > 0 para o gráfico de custo, também ordenado
+  const comCusto = projetos.filter(p => p.custo_total > 0).sort((a,b) => b.custo_total - a.custo_total);
+  const custoLabels = comCusto.map(p => p.nome.replace('Projeto ', ''));
+  const custoValues = comCusto.map(p => p.custo_total);
+
   initCharts(
-    projetos.map(p => p.nome.replace('Projeto ', '')),
-    projetos.map(p => p.qtd),
-    projetos.filter(p => p.custo_total > 0).map(p => p.nome.replace('Projeto ', '')),
-    projetos.filter(p => p.custo_total > 0).map(p => p.custo_total),
+    projLabels,
+    projValues,
+    custoLabels,
+    custoValues,
     [tiposCount.Custo, tiposCount.Tempo, tiposCount.Escopo, tiposCount.Prazo],
     [kpis.aprov_n, kpis.total_mudancas - kpis.aprov_n - kpis.pend_n - kpis.andam_n, kpis.pend_n, kpis.andam_n],
     kpis
   );
 }
 
-// Aguarda DOM estar pronto antes de carregar
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', carregarDados);
-} else {
-  carregarDados();
-}
+// Inicia carregamento com pequeno delay para garantir DOM pronto
+setTimeout(carregarDados, 100);
 
 </script>
 <!-- LOADING -->
