@@ -666,6 +666,9 @@ async function carregarDados() {
       const firstTab = document.querySelector('.proj-tab');
       if (firstTab) firstTab.classList.add('active');
       renderDetail(firstId);
+      // Destroi instâncias antigas antes de recriar
+      [chartProjInstance, chartTipoInstance, chartCustoInstance, chartStatusInstance].forEach(c => { if(c) c.destroy(); });
+      chartProjInstance = chartTipoInstance = chartCustoInstance = chartStatusInstance = null;
       chartsInited = false;
       atualizarGraficos(projetosWorker, kpis);
     }
