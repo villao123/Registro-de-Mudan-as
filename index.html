@@ -670,7 +670,8 @@ async function carregarDados() {
       [chartProjInstance, chartTipoInstance, chartCustoInstance, chartStatusInstance].forEach(c => { if(c) c.destroy(); });
       chartProjInstance = chartTipoInstance = chartCustoInstance = chartStatusInstance = null;
       chartsInited = false;
-      atualizarGraficos(projetosWorker, kpis);
+      // Pequeno delay para o canvas resetar antes de recriar
+      setTimeout(() => atualizarGraficos(projetosWorker, kpis), 200);
     }
 
   } catch (e) {
