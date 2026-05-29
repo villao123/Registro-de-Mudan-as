@@ -792,28 +792,30 @@ function filtrarTabelaPorProjeto(nomeLabel) {
 }
 
 function filtrarTabelaPorTipo(tipo) {
-  // Ativa botão correspondente
   document.querySelectorAll('.filter-btn').forEach(b => {
     b.classList.toggle('active', b.textContent.trim().toLowerCase() === tipo.toLowerCase());
   });
 
   filtroAtivo = { tipo: 'tipo', valor: tipo };
 
-  // Conta quantas mudanças do tipo existe em cada projeto
   let totalTipo = 0;
   document.querySelectorAll('#mainTable tbody tr').forEach(tr => {
-    const projId = tr.getAttribute('onclick') ? tr.getAttribute('onclick').match(/'([^']+)'/)?.[1] : null;
-    const tipoTr = tr.dataset.tipo;
-    const match = tipoTr && tipoTr.toLowerCase() === tipo.toLowerCase();
-    tr.classList.toggle('hidden', !match);
+    const onclick = tr.getAttribute('onclick') || '';
+    const projId = onclick.match(/'([^']+)'/)?.[1];
+    if (!projId || !PROJECTS[projId]) return;
 
-    if (match && projId && PROJECTS[projId]) {
-      // Conta rows desse projeto com esse tipo
-      const count = (PROJECTS[projId].rows || []).filter(r => r[2] && r[2].toLowerCase() === tipo.toLowerCase()).length;
+    // Conta mudanças desse tipo nesse projeto
+    const count = (PROJECTS[projId].rows || []).filter(r =>
+      r[2] && r[2].toLowerCase() === tipo.toLowerCase()
+    ).length;
+
+    if (count > 0) {
+      tr.classList.remove('hidden');
       totalTipo += count;
-      // Atualiza o QTD pill da linha
       const qtdEl = tr.querySelector('.pill.p-blue');
       if (qtdEl) qtdEl.textContent = count;
+    } else {
+      tr.classList.add('hidden');
     }
   });
 
