@@ -663,10 +663,10 @@ async function carregarDados() {
     // Renderiza primeiro projeto (PROJECTS já populado) e gráficos
     if (projetosWorker.length > 0) {
       const firstId = projetosWorker[0].id;
-      // Marca primeira aba como ativa
       const firstTab = document.querySelector('.proj-tab');
       if (firstTab) firstTab.classList.add('active');
       renderDetail(firstId);
+      chartsInited = false;
       atualizarGraficos(projetosWorker, kpis);
     }
 
